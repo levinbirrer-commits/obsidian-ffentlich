@@ -1,0 +1,43 @@
+{%- comment -%}
+  Produktkarte. Badge über Produkt-Tags: bestseller, trend, new.
+  Kurztext und Größe aus den Metafeldern custom.tagline / custom.size.
+{%- endcomment -%}
+{%- liquid
+  assign badge = ''
+  if product.tags contains 'bestseller'
+    assign badge = 'bestseller'
+  elsif product.tags contains 'trend'
+    assign badge = 'trend'
+  elsif product.tags contains 'new'
+    assign badge = 'new'
+  endif
+  assign size = product.metafields.custom.size.value
+  assign variant = product.selected_or_first_available_variant
+  assign cat_title = product.collections.first.title
+-%}
+<article class="card">
+  {%- if badge != '' -%}
+    <span class="badge{% if badge == 'trend' %} badge--outline{% endif %}">{{ 'sno.badges.' | append: badge | t }}</span>
+  {%- endif -%}
+  <a class="card__media card__media--photo stage" href="{{ product.url }}" aria-label="{%- assign ptitle = product.title | escape -%}{{ 'sno.view_product' | t | replace: '[title]', ptitle }}">
+    {%- render 'sno-img', product: product -%}
+    <span class="card__quick">{{ 'sno.view' | t }}</span>
+  </a>
+  <div class="card__body">
+    <div class="card__row">
+      <h3 class="card__name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+      <span class="price">{% if product.compare_at_price > product.price %}<s>{{ product.compare_at_price | money }}</s>{% endif %}{{ product.price | money }}</span>
+    </div>
+    {%- if product.metafields.custom.tagline != blank -%}
+      <p class="card__tag">{{ product.metafields.custom.tagline.value }}</p>
+    {%- endif -%}
+    <p class="card__meta">{{ cat_title }}{% if cat_title != blank and size != blank %} · {% endif %}{{ size }}</p>
+    <span class="card__spacer"></span>
+    {%- form 'product', product, class: 'card__form' -%}
+      <input type="hidden" name="id" value="{{ variant.id }}">
+      <button class="btn btn--ghost btn--block" type="submit"{% unless variant.available %} disabled{% endunless %}>
+        {%- if variant.available %}{{ 'sno.add_to_cart' | t }}{% else %}{{ 'sno.sold_out' | t }}{% endif -%}
+      </button>
+    {%- endform -%}
+  </div>
+</article>

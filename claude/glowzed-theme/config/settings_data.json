@@ -1,0 +1,51 @@
+{
+  "current": {
+    "brand": "Glowzed",
+    "logo_text": "Gløwzed",
+    "announcement": "Free shipping over [free] · New drops every week",
+    "free_from": 50,
+    "sections": {
+      "sno-header": {
+        "type": "sno-header",
+        "settings": {
+          "menu_left": "sno-shop",
+          "menu_right": "sno-info",
+          "show_account": true,
+          "acct_tab_in": "Sign in",
+          "acct_tab_up": "Create account",
+          "acct_title": "Sign in to",
+          "acct_text": "No password needed. We email you a 6-digit code.",
+          "acct_btn": "Continue",
+          "acct_up_title": "Join",
+          "acct_up_text": "Just your email, no password. Confirm the 6-digit code we send you and your account is ready.",
+          "acct_up_btn": "Create account",
+          "acct_perks": "Track every order | Reorder in one tap | Faster checkout with saved details",
+          "acct_fine": "New here?",
+          "acct_fine_up": "Already have an account?",
+          "acct_hello": "Welcome back,",
+          "acct_add_name": "Add your name",
+          "acct_toast": "Hey [name], you're signed in.",
+          "acct_toast_new": "Welcome to [brand]. Your account is ready.",
+          "acct_orders": "Orders & tracking",
+          "acct_first_title": "Find your routine",
+          "acct_first_text": "4 quick questions →"
+        }
+      },
+      "sno-footer": {
+        "type": "sno-footer",
+        "settings": {
+          "mission": "Grooming that works. Fair prices, fast support, no BS.",
+          "menu_1": "sno-shop",
+          "title_1": "Shop",
+          "menu_2": "sno-help",
+          "title_2": "Help",
+          "title_3": "Legal",
+          "bottom_text": "All prices in [currency], plus shipping"
+        }
+      }
+    },
+    "free_from_usd": 60,
+    "free_from_eur": 55,
+    "free_from_gbp": 45
+  }
+}

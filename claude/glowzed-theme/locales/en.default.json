@@ -1,0 +1,125 @@
+{
+  "general": {
+    "brand": "Glowzed"
+  },
+  "sno": {
+    "home": "Home",
+    "page": "Page",
+    "close": "Close",
+    "email": "Email",
+    "email_placeholder": "Your email address",
+    "go_to_shop": "Go to shop",
+    "shop_now": "Shop now",
+    "add_to_cart": "Add to cart",
+    "sold_out": "Sold out",
+    "view": "View",
+    "view_product": "View [title]",
+    "less": "Less",
+    "more": "More",
+    "quantity": "Quantity",
+    "variant": "Variant",
+    "products_count": "[n] products",
+    "from_price": "from [price]",
+    "estimated_delivery": "Estimated delivery",
+    "days": "[days] days",
+    "free_shipping_over": "Free shipping over [free]",
+    "our_promise": "Our promise",
+    "meta_description": "Cheap men's skincare, hair care and grooming that actually works: mouth tape, sea salt spray, tallow balm and more at fair prices, plus a 4-question quiz.",
+    "seo": {
+      "home_title": "Glowzed – Affordable Men's Skincare & Hair Care"
+    },
+    "badges": {
+      "bestseller": "Bestseller",
+      "trend": "Trend",
+      "new": "New"
+    },
+    "date": {
+      "months": "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec",
+      "day_suffix": "",
+      "month_day": "[m] [d]"
+    },
+    "header": {
+      "main_nav": "Main",
+      "info_nav": "Info",
+      "mobile_nav": "Mobile navigation",
+      "open_menu": "Open menu",
+      "search": "Search",
+      "cart": "Cart"
+    },
+    "account": {
+      "account": "Account",
+      "your_account": "Your account",
+      "sign_in_or_create": "Sign in or create account",
+      "welcome_to": "Welcome to",
+      "welcome_back_html": "Welcome <em>back.</em>",
+      "order": "Order",
+      "orders": "Orders",
+      "processing": "Processing",
+      "profile": "Profile",
+      "routine": "Your Routine",
+      "sign_out": "Sign out",
+      "email_placeholder": "you@email.com"
+    },
+    "cart": {
+      "crumb": "Cart",
+      "title_html": "Your <em>cart.</em>",
+      "empty": "Your cart is empty.",
+      "remove": "Remove",
+      "free_away_html": "Only <strong>[amount]</strong> away from free shipping.",
+      "free_unlocked_html": "<strong>Free shipping</strong> unlocked.",
+      "parcels": "may arrive in separate parcels",
+      "subtotal": "Subtotal",
+      "note": "Prices in [currency]. Shipping is calculated at checkout.",
+      "update": "Update cart",
+      "checkout": "Checkout"
+    },
+    "collection": {
+      "soon": "Products coming soon."
+    },
+    "contact": {
+      "name": "Name",
+      "order": "Order number (optional)",
+      "message": "Message"
+    },
+    "quiz": {
+      "back": "← Back"
+    },
+    "footer": {
+      "ship_to": "Ship to",
+      "language": "Language",
+      "impressum": "Impressum"
+    },
+    "search": {
+      "crumb": "Search",
+      "heading_html": "Find <em>it.</em>",
+      "placeholder": "Mouth tape, tallow, sea salt spray…",
+      "button": "Search",
+      "results": "[n] results for “[terms]”"
+    },
+    "not_found": {
+      "heading_html": "Page not <em>found.</em>",
+      "text": "Maybe you will find it here:"
+    },
+    "collections": {
+      "heading_html": "All <em>categories.</em>"
+    },
+    "blog": {
+      "eyebrow": "Journal",
+      "empty": "No articles yet."
+    },
+    "password": {
+      "title": "Opening soon",
+      "soon_html": "<em>soon.</em>",
+      "notify": "Notify me",
+      "enter_with_password": "Enter with password",
+      "password": "Password",
+      "enter": "Enter"
+    },
+    "gift_card": {
+      "title": "Gift card",
+      "code": "Code:",
+      "balance": "Balance:",
+      "expired": "expired"
+    }
+  }
+}

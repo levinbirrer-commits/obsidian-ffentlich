@@ -1,0 +1,29 @@
+<section class="section">
+  <div class="wrap">
+    {%- if page.content != blank -%}<div class="rte rte--page">{{ page.content }}</div>{%- endif -%}
+    {%- form 'contact', class: 'contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-ok">{{ section.settings.success }}</p>
+      {%- elsif form.errors -%}
+        <p class="form-err">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+      <label>{{ 'sno.contact.name' | t }}<input type="text" name="contact[name]" autocomplete="name"></label>
+      <label>{{ 'sno.email' | t }}<input type="email" name="contact[email]" autocomplete="email" required></label>
+      {%- if section.settings.show_order -%}<label>{{ 'sno.contact.order' | t }}<input type="text" name="contact[order]"></label>{%- endif -%}
+      <label>{{ 'sno.contact.message' | t }}<textarea name="contact[body]" rows="6" required></textarea></label>
+      <button class="btn btn--solid" type="submit">{{ section.settings.button }}</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    { "type": "checkbox", "id": "show_order", "label": "Ask for order number", "default": true },
+    { "type": "text", "id": "button", "label": "Button label", "default": "Send" },
+    { "type": "text", "id": "success", "label": "Thank-you message", "default": "Thanks. We will get back to you soon." }
+  ],
+  "presets": [{ "name": "Contact form" }]
+}
+{% endschema %}

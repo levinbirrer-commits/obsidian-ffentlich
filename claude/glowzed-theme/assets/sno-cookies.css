@@ -1,0 +1,89 @@
+
+/* Cookie-Banner von Shopify im Glowzed-Look (Shopify setzt nur Klassen-Regeln, die IDs hier gewinnen) */
+#shopify-pc__banner.shopify-pc__banner__dialog {
+  left: auto; right: 24px; bottom: 24px; width: min(460px, calc(100% - 32px)); min-width: 0; max-height: calc(100% - 48px);
+  padding: 24px 24px 18px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, .1);
+  background: var(--speckle-soft) 0 0 / 420px 420px, var(--lacquer); background-color: #0c0c0e;
+  box-shadow: var(--hi), 0 30px 70px -20px rgba(0, 0, 0, .95), 0 0 0 1px rgba(0, 0, 0, .6);
+  font-family: var(--sans); color: var(--text);
+  animation: gzCookieIn .5s var(--ease) both;
+}
+@keyframes gzCookieIn { from { opacity: 0; transform: translateY(16px); } }
+#shopify-pc__banner h2 { color: var(--text); font-size: 20px; font-weight: 500; letter-spacing: -.01em; margin: 0 0 8px; }
+#shopify-pc__banner p { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+#shopify-pc__banner a { color: var(--text); text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, .35); }
+#shopify-pc__banner .shopify-pc__banner__body { margin-bottom: 16px; }
+#shopify-pc__banner .shopify-pc__banner__btns { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+#shopify-pc__banner button {
+  margin: 0; flex: 1 1 calc(50% - 4px); height: 44px; padding: 0 16px; border-radius: 999px;
+  font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+#shopify-pc__banner #shopify-pc__banner__btn-accept {
+  order: 1; color: #050505; border: 1px solid rgba(255, 255, 255, .9);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f2f4 46%, #d8dbe0 54%, #f8f8fa 100%);
+  box-shadow: inset 0 1px 0 #fff, 0 12px 30px -14px rgba(255, 255, 255, .45);
+}
+#shopify-pc__banner #shopify-pc__banner__btn-accept:hover { background: #fff; transform: translateY(-1px); }
+#shopify-pc__banner #shopify-pc__banner__btn-decline {
+  order: 2; color: var(--text); border: 1px solid rgba(255, 255, 255, .18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .025) 50%, rgba(255, 255, 255, .05));
+}
+#shopify-pc__banner #shopify-pc__banner__btn-decline:hover { border-color: rgba(255, 255, 255, .38); }
+#shopify-pc__banner #shopify-pc__banner__btn-manage-prefs {
+  order: 3; flex-basis: 100%; height: auto; padding: 8px 0 2px; background: none; border: 0; color: var(--muted);
+  font-size: 10.5px; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, .25);
+}
+#shopify-pc__banner #shopify-pc__banner__btn-manage-prefs:hover { color: var(--text); }
+#shopify-pc__banner button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255, 255, 255, .35); }
+@media (max-width: 600px) {
+  #shopify-pc__banner.shopify-pc__banner__dialog { left: 12px; right: 12px; bottom: 12px; width: auto; padding: 20px 18px 14px; }
+}
+
+/* Cookie-Einstellungen (Manage preferences) */
+#shopify-pc__prefs__overlay.shopify-pc__prefs__overlay { background: rgba(0, 0, 0, .7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+#shopify-pc__prefs__dialog.shopify-pc__prefs__dialog {
+  left: 50%; width: min(720px, calc(100% - 24px)); transform: translate(-50%, -50%);
+  border-radius: 22px; border: 1px solid rgba(255, 255, 255, .1);
+  background: var(--speckle-soft) 0 0 / 420px 420px, var(--lacquer); background-color: #0c0c0e;
+  box-shadow: var(--hi), 0 40px 90px -20px rgba(0, 0, 0, .95);
+  font-family: var(--sans); color: var(--text);
+}
+#shopify-pc__prefs__dialog header { border-bottom: 1px solid var(--line); }
+#shopify-pc__prefs__dialog h2, #shopify-pc__prefs__dialog h3, #shopify-pc__prefs__dialog label { color: var(--text); font-family: var(--sans); }
+#shopify-pc__prefs__dialog h2 { font-weight: 500; font-size: 22px; letter-spacing: -.01em; }
+#shopify-pc__prefs__dialog p, #shopify-pc__prefs__dialog li { color: var(--muted); }
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option { border-color: var(--line); }
+#shopify-pc__prefs__dialog svg path { fill: #f2f2f3; }
+#shopify-pc__prefs__dialog #shopify-pc__prefs__header-close { width: 32px; height: 32px; }
+#shopify-pc__prefs__dialog #shopify-pc__prefs__header-close:hover { background: rgba(255, 255, 255, .08); }
+#shopify-pc__prefs__dialog .shopify-pc__prefs__header-actions { gap: 8px; }
+#shopify-pc__prefs__dialog .shopify-pc__prefs__header-actions button {
+  margin: 0; height: 42px; padding: 0 18px; border-radius: 999px; font-family: var(--sans);
+  font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1;
+  color: var(--text); border: 1px solid rgba(255, 255, 255, .18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .025) 50%, rgba(255, 255, 255, .05));
+}
+#shopify-pc__prefs__dialog #shopify-pc__prefs__header-accept {
+  color: #050505; border-color: rgba(255, 255, 255, .9);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f2f4 46%, #d8dbe0 54%, #f8f8fa 100%);
+}
+#shopify-pc__prefs__dialog .shopify-pc__prefs__header-actions button:focus-visible,
+#shopify-pc__prefs__dialog #shopify-pc__prefs__header-close:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255, 255, 255, .35); }
+/* Eigene Kästchen statt der weissen Shopify-Symbole */
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option:first-child { border-top: 1px solid var(--line); }
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option label span {
+  position: relative; flex: none; width: 22px; height: 22px; border-radius: 7px;
+  background: rgba(0, 0, 0, .45); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); transition: background .2s, box-shadow .2s;
+}
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option label span svg { display: none !important; }
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option label input:checked ~ span {
+  background: linear-gradient(180deg, #ffffff 0%, #eceef1 50%, #d9dce1 100%); box-shadow: inset 0 0 0 1px #fff, 0 0 12px -2px rgba(255, 255, 255, .35);
+}
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option label input:checked ~ span::after {
+  content: ''; position: absolute; left: 7.5px; top: 3.5px; width: 5px; height: 10px;
+  border: solid #050505; border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option label input[aria-readonly="true"] ~ span { opacity: .55; }
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option label input:focus-visible ~ span { box-shadow: inset 0 0 0 1px #fff, 0 0 0 3px rgba(255, 255, 255, .3); }
+#shopify-pc__prefs__dialog .shopify-pc__prefs__option label input:focus ~ span { background-color: transparent; }

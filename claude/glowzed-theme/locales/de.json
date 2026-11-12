@@ -1,0 +1,125 @@
+{
+  "general": {
+    "brand": "Glowzed"
+  },
+  "sno": {
+    "home": "Start",
+    "page": "Seite",
+    "close": "Schließen",
+    "email": "E-Mail",
+    "email_placeholder": "Deine E-Mail-Adresse",
+    "go_to_shop": "Zum Shop",
+    "shop_now": "Jetzt shoppen",
+    "add_to_cart": "In den Warenkorb",
+    "sold_out": "Ausverkauft",
+    "view": "Ansehen",
+    "view_product": "[title] ansehen",
+    "less": "Weniger",
+    "more": "Mehr",
+    "quantity": "Menge",
+    "variant": "Variante",
+    "products_count": "[n] Produkte",
+    "from_price": "ab [price]",
+    "estimated_delivery": "Voraussichtliche Lieferung",
+    "days": "[days] Tage",
+    "free_shipping_over": "Gratisversand ab [free]",
+    "our_promise": "Unser Versprechen",
+    "meta_description": "Günstige Pflege für Männer, die funktioniert: Hautpflege, Haarpflege, Mouth Tape, Sea Salt Spray, Tallow-Balsam und mehr – plus ein Quiz mit 4 Fragen.",
+    "seo": {
+      "home_title": "Glowzed – Günstige Hautpflege & Haarpflege für Männer"
+    },
+    "badges": {
+      "bestseller": "Bestseller",
+      "trend": "Trend",
+      "new": "Neu"
+    },
+    "date": {
+      "months": "Jan,Feb,März,Apr,Mai,Juni,Juli,Aug,Sept,Okt,Nov,Dez",
+      "day_suffix": ".",
+      "month_day": "[d]. [m]"
+    },
+    "header": {
+      "main_nav": "Hauptmenü",
+      "info_nav": "Info",
+      "mobile_nav": "Mobile Navigation",
+      "open_menu": "Menü öffnen",
+      "search": "Suche",
+      "cart": "Warenkorb"
+    },
+    "account": {
+      "account": "Konto",
+      "your_account": "Dein Konto",
+      "sign_in_or_create": "Anmelden oder Konto erstellen",
+      "welcome_to": "Willkommen bei",
+      "welcome_back_html": "Willkommen <em>zurück.</em>",
+      "order": "Bestellung",
+      "orders": "Bestellungen",
+      "processing": "In Bearbeitung",
+      "profile": "Profil",
+      "routine": "Deine Routine",
+      "sign_out": "Abmelden",
+      "email_placeholder": "du@email.com"
+    },
+    "cart": {
+      "crumb": "Warenkorb",
+      "title_html": "Dein <em>Warenkorb.</em>",
+      "empty": "Dein Warenkorb ist leer.",
+      "remove": "Entfernen",
+      "free_away_html": "Nur noch <strong>[amount]</strong> bis zum Gratisversand.",
+      "free_unlocked_html": "<strong>Gratisversand</strong> freigeschaltet.",
+      "parcels": "kann in mehreren Paketen ankommen",
+      "subtotal": "Zwischensumme",
+      "note": "Preise in [currency]. Der Versand wird an der Kasse berechnet.",
+      "update": "Warenkorb aktualisieren",
+      "checkout": "Zur Kasse"
+    },
+    "collection": {
+      "soon": "Produkte folgen bald."
+    },
+    "contact": {
+      "name": "Name",
+      "order": "Bestellnummer (optional)",
+      "message": "Nachricht"
+    },
+    "quiz": {
+      "back": "← Zurück"
+    },
+    "footer": {
+      "ship_to": "Lieferland",
+      "language": "Sprache",
+      "impressum": "Impressum"
+    },
+    "search": {
+      "crumb": "Suche",
+      "heading_html": "Finde <em>es.</em>",
+      "placeholder": "Mouth Tape, Tallow, Meersalz-Spray …",
+      "button": "Suchen",
+      "results": "[n] Ergebnisse für „[terms]“"
+    },
+    "not_found": {
+      "heading_html": "Seite nicht <em>gefunden.</em>",
+      "text": "Vielleicht findest du es hier:"
+    },
+    "collections": {
+      "heading_html": "Alle <em>Kategorien.</em>"
+    },
+    "blog": {
+      "eyebrow": "Journal",
+      "empty": "Noch keine Artikel."
+    },
+    "password": {
+      "title": "Bald geöffnet",
+      "soon_html": "<em>bald.</em>",
+      "notify": "Benachrichtige mich",
+      "enter_with_password": "Mit Passwort eintreten",
+      "password": "Passwort",
+      "enter": "Eintreten"
+    },
+    "gift_card": {
+      "title": "Geschenkkarte",
+      "code": "Code:",
+      "balance": "Guthaben:",
+      "expired": "abgelaufen"
+    }
+  }
+}

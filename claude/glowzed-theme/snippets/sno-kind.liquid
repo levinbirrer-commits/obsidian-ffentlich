@@ -1,0 +1,19 @@
+{%- comment -%}
+  Bildart eines Produkts: meta = Metafeld „Freigestelltes Bild“, cut/photo = mitgeliefertes Theme-Bild (nach SKU), leer = normales Produktbild
+{%- endcomment -%}
+{%- liquid
+  if product.metafields.custom.cutout_image != blank
+    echo 'meta'
+  else
+    assign sku = product.selected_or_first_available_variant.sku
+    assign cuts = 'beardstraightener,blackhead,bodywash,browrazor,clay,cleanser,conditioner,curlcream,curlgel,doppkit,eyepatch,fibers,guasha,insoles,ledmask,mouthtape,multitrimmer,nosestrips,pimple,powder,refresh,retinol,rosemary,seasalt,shampoo,silkpillow,sleepkit,talloweo,tallowmanuka,tongue,trimmer,waterflosser' | split: ','
+    assign fotos = 'beardbalm,beardoil,boarbrush,bodyscrubber,claymask,coffeescrub,deo,eyecream,facebrush,lipbalm,lotion,moisturizer,nailkit,niacinamide,nosetrimmer,posture,safetyrazor,showerfilter,sleepmask,steelguasha,tallow,towel' | split: ','
+    if sku != blank
+      if cuts contains sku
+        echo 'cut'
+      elsif fotos contains sku
+        echo 'photo'
+      endif
+    endif
+  endif
+-%}

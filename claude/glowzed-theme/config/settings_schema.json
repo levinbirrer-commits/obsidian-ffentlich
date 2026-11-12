@@ -1,0 +1,86 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Glowzed Gloss",
+    "theme_version": "2.0.0",
+    "theme_author": "Glowzed",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      {
+        "type": "text",
+        "id": "brand",
+        "label": "Brand name",
+        "info": "Shown as logo text if no logo image is set",
+        "default": "Glowzed"
+      },
+      {
+        "type": "text",
+        "id": "logo_text",
+        "label": "Logo text",
+        "info": "Shown in the logo (header, footer, password page). Can be stylised, e.g. Gløwzed. Page titles and search engines keep using the brand name.",
+        "default": "Gløwzed"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image (optional)"
+      },
+      {
+        "type": "text",
+        "id": "announcement",
+        "label": "Announcement bar",
+        "info": "Empty = hidden",
+        "default": "Free shipping over [free] · New drops every week"
+      },
+      {
+        "type": "number",
+        "id": "free_from",
+        "label": "Free shipping from (CHF)",
+        "info": "Use [free] in texts to show this amount in the customer's currency. Must match the shipping rates of each market (Settings → Markets).",
+        "default": 50
+      },
+      {
+        "type": "number",
+        "id": "free_from_usd",
+        "label": "Free shipping from (USD market)",
+        "default": 60
+      },
+      {
+        "type": "number",
+        "id": "free_from_eur",
+        "label": "Free shipping from (EUR market)",
+        "default": 55
+      },
+      {
+        "type": "number",
+        "id": "free_from_gbp",
+        "label": "Free shipping from (GBP market)",
+        "default": 45
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "url",
+        "id": "tiktok",
+        "label": "TikTok"
+      },
+      {
+        "type": "url",
+        "id": "instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "youtube",
+        "label": "YouTube"
+      }
+    ]
+  }
+]

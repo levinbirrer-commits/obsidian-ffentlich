@@ -1,0 +1,64 @@
+{%- comment -%}
+  Produkt-Aufstellung auf dem Spiegelboden.
+  products: Liste von Produkten (z. B. aus einer Produktauswahl oder collection.products)
+  max: wie viele höchstens, tag: 'a' (verlinkt) oder 'span'
+  Es werden nur Produkte mit freigestelltem Bild genommen; das erste steht in der Mitte.
+{%- endcomment -%}
+{%- liquid
+  assign limit = max | default: 5
+  assign el = tag | default: 'a'
+  assign n = 0
+  for p in products
+    if n >= limit
+      break
+    endif
+    capture k
+      render 'sno-kind', product: p
+    endcapture
+    if k contains 'meta' or k contains 'cut'
+      assign n = n | plus: 1
+    endif
+  endfor
+  case n
+    when 1
+      assign slots = '0'
+      assign widths = '64'
+    when 2
+      assign slots = '1,0'
+      assign widths = '48,48'
+    when 3
+      assign slots = '1,0,2'
+      assign widths = '34,44,34'
+    when 4
+      assign slots = '2,1,3,0'
+      assign widths = '26,32,32,26'
+    else
+      assign slots = '2,1,3,0,4'
+      assign widths = '21,25,32,25,21'
+  endcase
+  assign slots = slots | split: ','
+  assign widths = widths | split: ','
+  assign mid = n | divided_by: 2
+  assign k_index = 0
+-%}
+{%- if n > 0 -%}
+  <div class="stage stage--panel">
+    <div class="lineup">
+      {%- for p in products -%}
+        {%- if k_index >= n -%}{%- break -%}{%- endif -%}
+        {%- capture kind -%}{%- render 'sno-kind', product: p -%}{%- endcapture -%}
+        {%- if kind contains 'meta' or kind contains 'cut' -%}
+          {%- liquid
+            assign slot = slots[k_index] | plus: 0
+            assign d = slot | minus: mid | abs
+            assign z = 10 | minus: d
+            assign k_index = k_index | plus: 1
+          -%}
+          <{{ el }}{% if el == 'a' %} href="{{ p.url }}"{% endif %} class="lineup__item" style="order:{{ slot }};--w:{{ widths[slot] }}%;--z:{{ z }}" aria-label="{{ p.title | escape }}">
+            {%- render 'sno-img', product: p -%}
+          </{{ el }}>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}

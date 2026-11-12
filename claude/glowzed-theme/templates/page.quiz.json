@@ -1,0 +1,163 @@
+{
+  "sections": {
+    "quiz": {
+      "type": "sno-quiz",
+      "settings": {
+        "eyebrow": "Your Routine",
+        "heading": "Find <em>your</em> routine.",
+        "intro": "Four quick questions. Then grab single products or take your whole routine: 15% off from 3 products.",
+        "result_eyebrow": "Your Routine",
+        "result_heading": "Made for <em>you.</em>",
+        "result_count": 3,
+        "extra_heading": "Also fits you",
+        "extra_count": 3,
+        "kits_heading": "Or take a ready-made kit",
+        "kits_count": 2,
+        "bundle_code": "ROUTINE",
+        "bundle_percent": 15,
+        "bundle_min": 3,
+        "pick_on": "In your routine",
+        "pick_off": "Add to routine",
+        "sum_items": "[n] products",
+        "sum_save": "Bundle discount: you save [amount] ([p]%)",
+        "sum_more": "Add [n] more to save [p]%",
+        "all_label": "Get the bundle",
+        "restart_label": "Start over",
+        "error_text": "Something went wrong. Please try again.",
+        "empty_text": "No match yet. Browse the whole shop instead.",
+        "added_text": "Added ✓",
+        "fail_text": "Try again",
+        "bundle_step": 0,
+        "bundle_max": 15,
+        "sum_next": "[n] more = [p]% off"
+      },
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "What do you want to level up first?",
+            "options": "Skin · clearer, fresher look | quiz-skin\nHair & beard · shape, volume, curls | quiz-hair\nBody · fresh all day | quiz-body\nSleep & recovery | quiz-sleep",
+            "show_if": "",
+            "weight": 3,
+            "must_match": true,
+            "strict": false
+          }
+        },
+        "skin1": {
+          "type": "question",
+          "settings": {
+            "question": "How does your skin feel by midday?",
+            "options": "Oily and shiny | quiz-oily\nDry or tight | quiz-dry\nI get spots now and then | quiz-spots\nPretty normal | quiz-normal",
+            "show_if": "quiz-skin",
+            "weight": 2,
+            "must_match": true,
+            "strict": true
+          }
+        },
+        "skin2": {
+          "type": "question",
+          "settings": {
+            "question": "What do you want to work on?",
+            "options": "Pores and blackheads | quiz-pores\nTired-looking eyes | quiz-eyes\nA sharper look with face tools | quiz-tools\nJust a solid daily base | quiz-basics",
+            "show_if": "quiz-skin",
+            "weight": 2,
+            "must_match": true,
+            "strict": false
+          }
+        },
+        "hair1": {
+          "type": "question",
+          "settings": {
+            "question": "Your hair right now?",
+            "options": "Curly or wavy | quiz-curly\nStraight and flat | quiz-volume\nShort or buzzed | quiz-short\nThe beard is the main thing | quiz-beard",
+            "show_if": "quiz-hair",
+            "weight": 3,
+            "must_match": true,
+            "strict": true
+          }
+        },
+        "hair2": {
+          "type": "question",
+          "settings": {
+            "question": "What do you want most?",
+            "options": "Hold and style | quiz-style\nHealthier-looking hair and scalp | quiz-scalp\nClean lines and trims | quiz-trim\nA soft, tamed beard | quiz-beardcare",
+            "show_if": "quiz-hair",
+            "weight": 3,
+            "must_match": true,
+            "strict": false
+          }
+        },
+        "body1": {
+          "type": "question",
+          "settings": {
+            "question": "What do you want to upgrade?",
+            "options": "Smell fresh all day | quiz-fresh\nSmoother skin | quiz-smooth\nShaving and trimming | quiz-shave\nTeeth, posture and the details | quiz-details",
+            "show_if": "quiz-body",
+            "weight": 3,
+            "must_match": true,
+            "strict": false
+          }
+        },
+        "body2": {
+          "type": "question",
+          "settings": {
+            "question": "How does your skin feel after a shower?",
+            "options": "Dry and tight | quiz-dry\nGets oily or sweaty fast | quiz-oily\nNo complaints | quiz-normal",
+            "show_if": "quiz-body",
+            "weight": 1,
+            "must_match": false,
+            "strict": true
+          }
+        },
+        "sleep1": {
+          "type": "question",
+          "settings": {
+            "question": "What gets in the way of good sleep?",
+            "options": "Too much light in the room | quiz-light\nI breathe through my mouth | quiz-mouth\nI wake up with messy hair or creases | quiz-pillow\nA bit of everything | quiz-light, quiz-mouth, quiz-pillow",
+            "show_if": "quiz-sleep",
+            "weight": 3,
+            "must_match": true,
+            "strict": false
+          }
+        },
+        "sleep2": {
+          "type": "question",
+          "settings": {
+            "question": "Want something for your skin overnight too?",
+            "options": "Yes, a night cream | quiz-nightskin\nYes, for under the eyes | quiz-eyes\nNo, just sleep",
+            "show_if": "quiz-sleep",
+            "weight": 2,
+            "must_match": true,
+            "strict": false
+          }
+        },
+        "time": {
+          "type": "question",
+          "settings": {
+            "question": "How much time do you want to spend on it?",
+            "options": "2 minutes, max | quiz-quick\n5 to 10 minutes | quiz-routine\nI'm all in | quiz-allin",
+            "show_if": "",
+            "weight": 1,
+            "must_match": false,
+            "strict": false
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "skin1",
+        "skin2",
+        "hair1",
+        "hair2",
+        "body1",
+        "body2",
+        "sleep1",
+        "sleep2",
+        "time"
+      ]
+    }
+  },
+  "order": [
+    "quiz"
+  ]
+}

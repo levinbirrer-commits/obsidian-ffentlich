@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "sno-collection",
+      "settings": {
+        "eyebrow": "Shop",
+        "show_lineup": true,
+        "lineup_count": 3,
+        "per_page": 48,
+        "more_menu": "sno-shop",
+        "more_label": "Keep browsing"
+      }
+    },
+    "routine_cta": {
+      "type": "sno-quiz-cta",
+      "settings": {
+        "eyebrow": "Your Routine",
+        "heading": "Don't know what you need? <em>Find your routine now.</em>",
+        "text": "Four quick questions. Then grab single products or your whole routine with 15% off.",
+        "btn_label": "Find your routine",
+        "link": "shopify://pages/your-routine"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "routine_cta"
+  ]
+}

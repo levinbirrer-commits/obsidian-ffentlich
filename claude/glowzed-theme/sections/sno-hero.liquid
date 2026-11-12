@@ -1,0 +1,41 @@
+<section class="hero">
+  <div class="wrap hero__inner">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+      <h1>{{ section.settings.heading }}</h1>
+      {%- if section.settings.lead != blank -%}<p class="hero__lead">{{ section.settings.lead }}</p>{%- endif -%}
+      <div class="hero__cta">
+        {%- if section.settings.btn1_label != blank -%}<a href="{{ section.settings.btn1_link | default: routes.all_products_collection_url }}" class="btn btn--solid">{{ section.settings.btn1_label }}</a>{%- endif -%}
+        {%- if section.settings.btn2_label != blank -%}<a href="{{ section.settings.btn2_link | default: routes.root_url }}" class="btn btn--ghost">{{ section.settings.btn2_label }}</a>{%- endif -%}
+      </div>
+      {%- if section.settings.steps_menu != blank -%}
+        <div class="hero__steps">
+          {%- for link in section.settings.steps_menu.links -%}
+            <a href="{{ link.url }}"><b>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</b>{{ link.title }}</a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="hero__art hero__art--photo">
+      {%- render 'sno-lineup', products: section.settings.products, max: 5, tag: 'a' -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Looksmaxxing Essentials" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "HTML allowed, e.g. <em>up.</em> for the chrome italic, <br> for a line break", "default": "Level <em>up.</em><br>Every day." },
+    { "type": "text", "id": "lead", "label": "Text", "info": "HTML allowed, e.g. <strong>bold</strong>", "default": "<strong>Skincare, hair and sleep tools</strong> everyone on TikTok is using right now." },
+    { "type": "text", "id": "btn1_label", "label": "Button 1 label", "default": "Shop now" },
+    { "type": "url", "id": "btn1_link", "label": "Button 1 link" },
+    { "type": "text", "id": "btn2_label", "label": "Button 2 label", "default": "The routine" },
+    { "type": "url", "id": "btn2_link", "label": "Button 2 link" },
+    { "type": "link_list", "id": "steps_menu", "label": "Numbered links under the buttons", "info": "Pick a menu, e.g. your categories" },
+    { "type": "product_list", "id": "products", "label": "Products on the mirror floor", "info": "Up to 5. Only products with a cut-out image are shown. The first one stands in the middle.", "limit": 5 }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

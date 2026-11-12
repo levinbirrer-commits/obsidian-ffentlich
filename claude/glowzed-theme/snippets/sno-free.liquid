@@ -1,0 +1,17 @@
+{%- comment -%}
+  Gratisversand-Schwelle in der kleinsten Einheit (Rappen/Cents/Pence) der Währung, in der der Kunde gerade einkauft.
+  Je Markt eine Einstellung: free_from (CHF), free_from_usd, free_from_eur, free_from_gbp.
+  Muss zu den Versandraten der Märkte passen (Einstellungen → Märkte → Versand).
+{%- endcomment -%}
+{%- liquid
+  assign cur = cart.currency.iso_code
+  assign f = settings.free_from
+  if cur == 'USD' and settings.free_from_usd > 0
+    assign f = settings.free_from_usd
+  elsif cur == 'EUR' and settings.free_from_eur > 0
+    assign f = settings.free_from_eur
+  elsif cur == 'GBP' and settings.free_from_gbp > 0
+    assign f = settings.free_from_gbp
+  endif
+-%}
+{{- f | times: 100 -}}

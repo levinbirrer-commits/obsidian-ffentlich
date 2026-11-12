@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- comment -%}
+    Sprache nach Land: Schweiz, Deutschland, Österreich, Liechtenstein → Deutsch, alle anderen Länder → Englisch.
+    Gilt nicht, wenn der Besucher unten im Footer selbst eine Sprache gewählt hat (Cookie glz_lang),
+    und nicht für Suchmaschinen und Link-Vorschauen (die sollen jede Sprachversion so sehen, wie sie ist).
+  {%- endcomment -%}
+  {%- liquid
+    assign glz_c = localization.country.iso_code
+    assign glz_want = 'en'
+    if glz_c == 'CH' or glz_c == 'DE' or glz_c == 'AT' or glz_c == 'LI'
+      assign glz_want = 'de'
+    endif
+    assign glz_to = ''
+    for glz_l in localization.available_languages
+      if glz_l.iso_code == glz_want
+        assign glz_to = glz_l.root_url
+      endif
+    endfor
+  -%}
+  {%- if glz_to != blank and request.locale.iso_code != glz_want -%}
+  <script>
+  (function () {
+    try {
+      if (/(^|;\s*)glz_lang=/.test(document.cookie)) return;
+      if (/bot|crawl|spider|slurp|lighthouse|headless|facebookexternalhit|whatsapp|telegram|discord|slack|twitter|pinterest|preview|embed/i.test(navigator.userAgent)) return;
+      var from = {{ routes.root_url | json }}, to = {{ glz_to | json }}, p = location.pathname;
+      if (from !== '/' && (p === from || p.indexOf(from + '/') === 0)) p = p.slice(from.length) || '/';
+      var url = (to === '/' ? '' : to) + (p === '/' && to !== '/' ? '' : p);
+      location.replace((url || '/') + location.search + location.hash);
+    } catch (e) {}
+  })();
+  </script>
+  {%- endif -%}
+  <meta name="theme-color" content="#040405">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ 'favicon-32.png' | asset_url }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ 'apple-touch-icon.png' | asset_url }}">
+  {%- comment -%}
+    SEO: Die Startseite bekommt einen Titel mit Suchbegriffen (sno.seo.home_title), solange unter
+    Onlineshop → Einstellungen kein eigener Startseiten-Titel eingetragen ist. Seiten ohne eigene
+    Beschreibung bekommen die allgemeine Shop-Beschreibung (sno.meta_description).
+  {%- endcomment -%}
+  {%- liquid
+    assign seo_title = page_title
+    if request.page_type == 'index'
+      if page_title == blank or page_title == shop.name or page_title == settings.brand
+        assign seo_title = 'sno.seo.home_title' | t
+      endif
+    endif
+    assign seo_desc = page_description | default: shop.description
+    if seo_desc == blank
+      assign seo_desc = 'sno.meta_description' | t
+    endif
+  -%}
+  <title>{{ seo_title }}{% if current_page != 1 %} – {{ 'sno.page' | t }} {{ current_page }}{% endif %}{% unless seo_title contains settings.brand %} — {{ settings.brand }}{% endunless %}</title>
+  <meta name="description" content="{{ seo_desc | strip_html | strip_newlines | escape_once }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  {%- render 'sno-meta', seo_title: seo_title, seo_desc: seo_desc -%}
+  {%- render 'sno-schema' -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  {{ 'sno.css' | asset_url | stylesheet_tag }}
+  {{ 'sno-shopify.css' | asset_url | stylesheet_tag }}
+  {{ 'sno-cookies.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+</head>
+{%- comment -%} [free] = Gratisversand-Schwelle, [currency] = Währung des Kunden (CHF, USD) {%- endcomment -%}
+{%- capture free_cents -%}{%- render 'sno-free' -%}{%- endcapture -%}
+{%- assign free_text = free_cents | strip | plus: 0 | money_without_trailing_zeros -%}
+{%- assign cur = cart.currency.iso_code -%}
+<body class="template-{{ template.name }}">
+  {%- capture sno_header -%}{% section 'sno-header' %}{%- endcapture -%}
+  {{ sno_header | replace: '[free]', free_text | replace: '[currency]', cur }}
+  {%- capture page_html -%}{{ content_for_layout }}{%- endcapture -%}
+  <main id="top">
+    {{ page_html | replace: '[free]', free_text | replace: '[currency]', cur }}
+  </main>
+  {%- capture sno_footer -%}{% section 'sno-footer' %}{%- endcapture -%}
+  {{ sno_footer | replace: '[free]', free_text | replace: '[currency]', cur }}
+  <script src="{{ 'sno.js' | asset_url }}" defer></script>
+</body>
+</html>

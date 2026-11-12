@@ -1,0 +1,14 @@
+{%- liquid
+  assign is_active = false
+  if link.active or link.child_active
+    assign is_active = true
+  elsif template.name == 'product' and link.type == 'collection_link'
+    for c in product.collections
+      if c.handle == link.object.handle
+        assign is_active = true
+        break
+      endif
+    endfor
+  endif
+-%}
+<a href="{{ link.url }}"{% if is_active %} class="active" aria-current="page"{% endif %}>{{ link.title }}</a>

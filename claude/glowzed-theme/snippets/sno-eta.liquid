@@ -1,0 +1,20 @@
+{%- comment -%}
+  Lieferdatum: heute + min..max Tage → EN „14–18 Nov“ / „28 Nov – 3 Dec“, DE „14.–18. Nov“ / „28. Nov – 3. Dez“
+  Monatsnamen und Punkt nach dem Tag kommen aus den Sprachdateien (sno.date.*).
+{%- endcomment -%}
+{%- liquid
+  assign months = 'sno.date.months' | t | split: ','
+  assign ds = 'sno.date.day_suffix' | t
+  assign now = 'now' | date: '%s' | plus: 0
+  assign t1 = min | times: 86400 | plus: now
+  assign t2 = max | times: 86400 | plus: now
+  assign i1 = t1 | date: '%-m' | minus: 1
+  assign i2 = t2 | date: '%-m' | minus: 1
+  assign d1 = t1 | date: '%-d'
+  assign d2 = t2 | date: '%-d'
+  if i1 == i2
+    echo d1 | append: ds | append: '–' | append: d2 | append: ds | append: ' ' | append: months[i1]
+  else
+    echo d1 | append: ds | append: ' ' | append: months[i1] | append: ' – ' | append: d2 | append: ds | append: ' ' | append: months[i2]
+  endif
+-%}

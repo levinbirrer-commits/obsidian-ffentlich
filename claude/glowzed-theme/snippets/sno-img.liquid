@@ -1,0 +1,22 @@
+{%- comment -%}
+  Produktbild auf der Glanz-Bühne.
+  1. Metafeld „Freigestelltes Bild“ (custom.cutout_image) → steht freigestellt auf dem Spiegelboden
+  2. Mitgelieferte Theme-Bilder (p-<sku>.webp, siehe sno-kind)
+  3. Sonst das normale Produktbild als gerahmtes Foto
+{%- endcomment -%}
+{%- liquid
+  capture kind
+    render 'sno-kind', product: product
+  endcapture
+  assign kind = kind | strip
+  assign sku = product.selected_or_first_available_variant.sku
+-%}
+{%- if kind == 'meta' -%}
+  <img class="pimg pimg--cut" src="{{ product.metafields.custom.cutout_image.value | image_url: width: 900 }}" alt="{{ product.title | escape }}" loading="lazy" width="900" height="900">
+{%- elsif kind == 'cut' or kind == 'photo' -%}
+  <img class="pimg pimg--{{ kind }}" src="{{ 'p-' | append: sku | append: '.webp' | asset_url }}" alt="{{ product.title | escape }}" loading="lazy" width="900" height="900">
+{%- elsif product.featured_image -%}
+  <img class="pimg pimg--photo" src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.featured_image.alt | default: product.title | escape }}" loading="lazy" width="900" height="900">
+{%- else -%}
+  <div class="ph-img"><span>{{ product.title | slice: 0, 2 | upcase }}</span></div>
+{%- endif -%}

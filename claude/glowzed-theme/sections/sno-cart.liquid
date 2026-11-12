@@ -1,0 +1,162 @@
+{%- comment -%}
+  Warenkorb. Bundle-Staffel wie im Quiz: Code = Präfix + Prozent (ROUTINE15, ROUTINE20 …).
+  Gezählt werden Einzelprodukte (ohne Produkte mit dem Tag „set“). Passt die Menge nicht mehr zum
+  angewendeten Code, erscheint ein Hinweis mit Link auf den passenden Code.
+{%- endcomment -%}
+{%- capture free_cents -%}{%- render 'sno-free' -%}{%- endcapture -%}
+{%- liquid
+  assign free_cents = free_cents | strip | plus: 0
+  assign rest = free_cents | minus: cart.total_price
+  assign pct = cart.total_price | times: 100 | divided_by: free_cents
+  if pct > 100
+    assign pct = 100
+  endif
+  assign emin = 0
+  assign emax = 0
+  assign rq = 0
+  for item in cart.items
+    assign d = item.product.metafields.custom.delivery.value | default: '8-15' | split: '-'
+    assign a = d[0] | plus: 0
+    assign b = d[1] | plus: 0
+    if a > emin
+      assign emin = a
+    endif
+    if b > emax
+      assign emax = b
+    endif
+    unless item.product.tags contains 'set'
+      assign rq = rq | plus: item.quantity
+    endunless
+  endfor
+
+  assign prefix = section.settings.bundle_code | strip | upcase
+  assign has_bundle = false
+  assign cur_pct = 0
+  if prefix != blank
+    for dc in cart.discount_codes
+      assign dcu = dc.code | upcase
+      if dcu contains prefix
+        assign has_bundle = true
+        if dc.applicable
+          assign cur_pct = dcu | remove: prefix | plus: 0
+        endif
+      endif
+    endfor
+  endif
+  assign bmin = section.settings.bundle_min
+  assign bstep = section.settings.bundle_step
+  assign bmax = section.settings.bundle_max
+  assign best = 0
+  if rq >= bmin
+    assign best = rq | minus: bmin | times: bstep | plus: section.settings.bundle_percent
+    if best > bmax
+      assign best = bmax
+    endif
+  endif
+  assign next_pct = best | plus: bstep
+  if next_pct > bmax
+    assign next_pct = bmax
+  endif
+  assign base = routes.root_url
+  unless base == '/'
+    assign base = base | append: '/'
+  endunless
+-%}
+<section class="section cart-page">
+  <div class="wrap">
+    <nav class="crumbs"><a href="{{ routes.root_url }}">{{ 'sno.home' | t }}</a> / {{ 'sno.cart.crumb' | t }}</nav>
+    <span class="eyebrow">{{ 'sno.cart.crumb' | t }}</span>
+    <h1 class="h2">{{ 'sno.cart.title_html' | t }}</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="empty">
+        <p>{{ 'sno.cart.empty' | t }}</p>
+        <a class="btn btn--ghost" href="{{ routes.root_url }}#shop">{{ 'sno.shop_now' | t }}</a>
+      </div>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart-form">
+        <div class="cart-lines">
+          {%- for item in cart.items -%}
+            <div class="line">
+              <a class="line__img line__img--photo stage" href="{{ item.url }}">{%- render 'sno-img', product: item.product -%}</a>
+              <div>
+                <a class="line__name" href="{{ item.url }}">{{ item.product.title }}</a>
+                <div class="line__meta">{{ item.product.metafields.custom.size.value }}</div>
+                <div class="qty">
+                  <button type="button" data-step="-1" aria-label="{{ 'sno.less' | t }}">−</button>
+                  <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="{{ 'sno.quantity' | t }}">
+                  <button type="button" data-step="1" aria-label="{{ 'sno.more' | t }}">+</button>
+                </div>
+              </div>
+              <div class="line__right">
+                <span class="price">{% if item.original_line_price > item.final_line_price %}<s>{{ item.original_line_price | money }}</s>{% endif %}{{ item.final_line_price | money }}</span>
+                {%- if item.original_line_price > item.final_line_price -%}
+                  {%- assign off_pct = item.original_line_price | minus: item.final_line_price | times: 100.0 | divided_by: item.original_line_price | round -%}
+                  <span class="disc-pill">−{{ off_pct }}%</span>
+                {%- endif -%}
+                <a class="remove" href="{{ item.url_to_remove }}">{{ 'sno.cart.remove' | t }}</a>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <aside class="cart-sum">
+          <div class="ship">
+            {%- if rest > 0 -%}
+              {%- assign rest_money = rest | money -%}{{ 'sno.cart.free_away_html' | t | replace: '[amount]', rest_money }}
+            {%- else -%}
+              {{ 'sno.cart.free_unlocked_html' | t }}
+            {%- endif -%}
+            <div class="ship__bar"><i style="width:{{ pct }}%"></i></div>
+            <p class="ship__eta">{{ 'sno.estimated_delivery' | t }} <strong>{% render 'sno-eta', min: emin, max: emax %}</strong>{% if cart.items.size > 1 %} · {{ 'sno.cart.parcels' | t }}{% endif %}</p>
+          </div>
+          {%- for da in cart.discount_applications -%}
+            {%- assign dt = da.title | upcase -%}
+            <div class="sum sum--disc">
+              <span>
+                {%- if prefix != blank and dt contains prefix -%}{{ section.settings.bundle_label }}{%- else -%}{{ da.title }}{%- endif -%}
+                {%- if da.value_type == 'percentage' %} <span class="disc-pill">−{{ da.value | round }}%</span>{% endif -%}
+              </span>
+              <span>−{{ da.total_allocated_amount | money }}</span>
+            </div>
+          {%- endfor -%}
+          {%- if has_bundle -%}
+            {%- if best > cur_pct -%}
+              <p class="tier-note">{{ section.settings.tier_up | replace: '[p]', best }} <a href="{{ base }}discount/{{ prefix }}{{ best }}?redirect={{ routes.cart_url | url_encode }}">{{ section.settings.apply_label }} →</a></p>
+            {%- elsif best == 0 -%}
+              {%- assign missing = bmin | minus: rq -%}
+              <p class="tier-note">{{ section.settings.tier_keep | replace: '[n]', missing }}</p>
+            {%- elsif next_pct > best -%}
+              <p class="tier-note">{{ section.settings.tier_next | replace: '[n]', 1 | replace: '[p]', next_pct }}</p>
+            {%- endif -%}
+          {%- endif -%}
+          <div class="sum"><span>{{ 'sno.cart.subtotal' | t }}</span><strong>{{ cart.total_price | money }}</strong></div>
+          <p class="sum-note">{{ 'sno.cart.note' | t }}</p>
+          <button class="btn btn--ghost btn--block" type="submit" name="update">{{ 'sno.cart.update' | t }}</button>
+          <button class="btn btn--solid btn--block" type="submit" name="checkout">{{ 'sno.cart.checkout' | t }}</button>
+        </aside>
+      </form>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ølby Cart",
+  "settings": [
+    { "type": "header", "content": "Bundle discount" },
+    { "type": "paragraph", "content": "Keep these the same as in the Your Routine quiz. Codes are prefix + percent (ROUTINE15, ROUTINE20 …)." },
+    { "type": "text", "id": "bundle_code", "label": "Discount code prefix", "default": "ROUTINE" },
+    { "type": "range", "id": "bundle_min", "label": "Minimum products", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "bundle_percent", "label": "Start discount", "unit": "%", "min": 0, "max": 30, "step": 5, "default": 15 },
+    { "type": "range", "id": "bundle_step", "label": "Extra per extra product", "unit": "%", "min": 0, "max": 10, "step": 5, "default": 5 },
+    { "type": "range", "id": "bundle_max", "label": "Maximum discount", "unit": "%", "min": 15, "max": 30, "step": 5, "default": 25 },
+    { "type": "header", "content": "Texts" },
+    { "type": "text", "id": "bundle_label", "label": "Name of the bundle discount", "default": "Bundle discount" },
+    { "type": "text", "id": "tier_up", "label": "Higher discount possible", "info": "[p] = percent", "default": "Your bundle now qualifies for [p]% off." },
+    { "type": "text", "id": "apply_label", "label": "Link: apply", "default": "Apply" },
+    { "type": "text", "id": "tier_next", "label": "Next level", "info": "[n] = products, [p] = percent", "default": "Add [n] more product for [p]% off." },
+    { "type": "text", "id": "tier_keep", "label": "Below minimum", "info": "[n] = products missing", "default": "Add [n] more product(s) to get your bundle discount back." }
+  ]
+}
+{% endschema %}

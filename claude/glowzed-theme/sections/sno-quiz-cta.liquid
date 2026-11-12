@@ -1,0 +1,54 @@
+{%- comment -%}
+  Hinweis-Banner zum Routine-Quiz („Don't know what you need?“). Die ganze Fläche ist ein Link.
+{%- endcomment -%}
+<style>
+.section.qcta { padding: clamp(8px, 2vw, 20px) 0 clamp(48px, 7vw, 96px); position: relative; }
+/* Eng: rückt zwischen zwei Abschnitte mit großem Abstand (z. B. Startseite) */
+.section.qcta--tight { padding: 0; margin: calc(clamp(80px, 11vw, 150px) * -.45) 0; }
+/* Die Trennlinie des folgenden Abschnitts würde sonst neben dem Banner durchscheinen */
+.qcta--tight + .section, .shopify-section:has(.qcta--tight) + .shopify-section > .section { border-top-color: transparent; }
+.qcta__panel {
+  display: flex; align-items: center; justify-content: space-between; gap: 22px 32px; flex-wrap: wrap;
+  padding: clamp(24px, 4vw, 46px); border-radius: var(--r); color: var(--text); text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: var(--speckle-soft) 0 0 / 420px 420px, var(--lacquer);
+  box-shadow: var(--hi), 0 34px 60px -34px rgba(0, 0, 0, .95);
+  transition: border-color .25s, transform .25s;
+}
+.qcta__panel:hover { border-color: rgba(255, 255, 255, .24); transform: translateY(-2px); }
+.qcta__text { flex: 1 1 420px; min-width: 0; }
+.qcta__h { font-size: clamp(26px, 3.6vw, 46px); line-height: 1.08; margin-top: 12px; }
+.qcta__p { color: var(--muted); margin-top: 12px; font-size: 15px; max-width: 520px; }
+.qcta__btn { flex: none; }
+@media (max-width: 600px) {
+  .qcta__btn { width: 100%; }
+}
+</style>
+{%- assign link = section.settings.link | default: pages['your-routine'].url | default: routes.all_products_collection_url -%}
+<section class="section qcta{% if section.settings.tight %} qcta--tight{% endif %}">
+  <div class="wrap">
+    <a class="qcta__panel" href="{{ link }}">
+      <div class="qcta__text">
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+        <h2 class="qcta__h">{{ section.settings.heading }}</h2>
+        {%- if section.settings.text != blank -%}<p class="qcta__p">{{ section.settings.text }}</p>{%- endif -%}
+      </div>
+      {%- if section.settings.btn_label != blank -%}<span class="btn btn--solid qcta__btn">{{ section.settings.btn_label }} →</span>{%- endif -%}
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Routine quiz banner",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Your Routine" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "HTML allowed, e.g. <em>now</em>", "default": "Don't know what you need? <em>Find your routine now.</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Four quick questions. Then grab single products or your whole routine with 15% off." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Find your routine" },
+    { "type": "url", "id": "link", "label": "Link", "info": "Empty = the Your Routine page" },
+    { "type": "checkbox", "id": "tight", "label": "Pull closer to the sections around it", "info": "For the homepage, between two sections with lots of space", "default": false }
+  ],
+  "presets": [{ "name": "Routine quiz banner" }]
+}
+{% endschema %}

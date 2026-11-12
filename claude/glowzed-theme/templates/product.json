@@ -1,0 +1,39 @@
+{
+  "sections": {
+    "main": {
+      "type": "sno-product",
+      "settings": {
+        "price_note": "",
+        "show_delivery": true,
+        "default_delivery": "8-15",
+        "show_related": true,
+        "related_eyebrow": "Recommended",
+        "related_heading": "Pairs <em>well</em>",
+        "related_count": 3
+      },
+      "blocks": {
+        "tab_12": {
+          "type": "tab",
+          "settings": {
+            "title": "Ingredients",
+            "text": "<p>You will find the full ingredient list on the packaging.</p>"
+          }
+        },
+        "tab_13": {
+          "type": "tab",
+          "settings": {
+            "title": "Shipping",
+            "text": "<p>Ships directly from our supplier. Estimated delivery for this product: [days] days, with tracking. Free shipping over [free]. If something arrives damaged or wrong, message us within 14 days of delivery and we'll replace it or refund you. Customers in the EU can withdraw from their order within 14 days (hygiene products only if unopened). See our <a href=\"/policies/refund-policy\">refund policy</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "tab_12",
+        "tab_13"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

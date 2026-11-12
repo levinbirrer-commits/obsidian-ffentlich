@@ -1,0 +1,73 @@
+{%- comment -%}
+  Strukturierte Daten für Google (JSON-LD).
+  Produktseiten: Product mit Preis, Währung und Verfügbarkeit (Google kann Preis und „Auf Lager“ in den Suchergebnissen zeigen).
+  Startseite: Organization + WebSite, damit Google den Markennamen „Glowzed“ und das Logo kennt.
+{%- endcomment -%}
+{%- assign brand_name = settings.brand | default: shop.name -%}
+{%- if request.page_type == 'product' and product -%}
+  {%- liquid
+    assign img = ''
+    if product.featured_image
+      assign img = product.featured_image | image_url: width: 1200
+      unless img contains 'https:'
+        assign img = 'https:' | append: img
+      endunless
+    endif
+    assign v0 = product.selected_or_first_available_variant
+  -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": {{ canonical_url | append: '#product' | json }},
+  "name": {{ product.title | json }},
+  "url": {{ canonical_url | json }},
+  {%- if img != blank %}
+  "image": [{{ img | json }}],
+  {%- endif %}
+  "description": {{ product.description | replace: '</li>', '. ' | replace: '</p>', ' ' | strip_html | strip_newlines | replace: '..', '.' | replace: ':.', ':' | strip | truncate: 500 | json }},
+  {%- if v0.sku != blank %}
+  "sku": {{ v0.sku | json }},
+  {%- endif %}
+  "brand": { "@type": "Brand", "name": {{ brand_name | json }} },
+  "offers": [
+    {%- for v in product.variants %}
+    {
+      "@type": "Offer",
+      "url": {{ request.origin | append: v.url | json }},
+      "price": {{ v.price | divided_by: 100.0 | round: 2 | json }},
+      "priceCurrency": {{ cart.currency.iso_code | json }},
+      "availability": "https://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}",
+      "itemCondition": "https://schema.org/NewCondition"
+      {%- if v.sku != blank -%},
+      "sku": {{ v.sku | json }}
+      {%- endif %}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}
+</script>
+{%- elsif request.page_type == 'index' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": {{ request.origin | append: '/#organization' | json }},
+      "name": {{ brand_name | json }},
+      "url": {{ request.origin | append: '/' | json }},
+      "logo": {{ 'apple-touch-icon.png' | asset_url | prepend: 'https:' | json }}
+    },
+    {
+      "@type": "WebSite",
+      "@id": {{ request.origin | append: '/#website' | json }},
+      "name": {{ brand_name | json }},
+      "url": {{ request.origin | append: routes.root_url | json }},
+      "inLanguage": {{ request.locale.iso_code | json }},
+      "publisher": { "@id": {{ request.origin | append: '/#organization' | json }} }
+    }
+  ]
+}
+</script>
+{%- endif -%}

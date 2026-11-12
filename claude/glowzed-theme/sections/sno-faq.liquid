@@ -1,0 +1,58 @@
+{%- liquid
+  assign lo = 99
+  assign hi = 0
+  for p in collections.all.products
+    assign d = p.metafields.custom.delivery.value | split: '-'
+    if d.size == 2
+      assign a = d[0] | plus: 0
+      assign b = d[1] | plus: 0
+      if a < lo
+        assign lo = a
+      endif
+      if b > hi
+        assign hi = b
+      endif
+    endif
+  endfor
+  if hi == 0
+    assign range = '7–15'
+  else
+    assign range = lo | append: '–' | append: hi
+  endif
+  assign free = '[free]'
+-%}
+<section class="section">
+  <div class="wrap faq__grid">
+    <div>{%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}</div>
+    <div class="faq__list">
+      {%- for block in section.blocks -%}
+        <details{% if forloop.first and section.settings.open_first %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.question }}</summary>
+          <div class="answer">{{ block.settings.answer | replace: '[delivery]', range | replace: '[free]', free }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Common questions" },
+    { "type": "checkbox", "id": "open_first", "label": "Open the first question", "default": true }
+  ],
+  "max_blocks": 30,
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How fast is shipping?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "info": "[delivery] = delivery range of all products (e.g. 6–20), [free] = free shipping amount", "default": "<p>Most orders arrive within [delivery] days.</p>" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "FAQ", "blocks": [{ "type": "question" }] }]
+}
+{% endschema %}

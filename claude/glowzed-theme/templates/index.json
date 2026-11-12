@@ -1,0 +1,238 @@
+{
+  "sections": {
+    "hero": {
+      "type": "sno-hero",
+      "settings": {
+        "eyebrow": "Looksmaxxing Essentials",
+        "heading": "Level <em>up.</em><br>Every day.",
+        "lead": "<strong>Skincare, hair and sleep tools</strong> everyone on TikTok is using right now. Fair prices, free shipping over [free].",
+        "btn1_label": "Shop now",
+        "btn1_link": "/collections/all",
+        "btn2_label": "Find your routine",
+        "btn2_link": "shopify://pages/your-routine",
+        "steps_menu": "sno-shop",
+        "products": [
+          "sea-salt-spray",
+          "mouth-tape",
+          "retinol-night-cream",
+          "texture-powder",
+          "hair-beard-trimmer"
+        ]
+      }
+    },
+    "strip": {
+      "type": "sno-strip",
+      "settings": {},
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "text": "Free shipping over [free]"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "icon": "trend",
+            "text": "Trending products"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "text": "Secure checkout"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "icon": "chat",
+            "text": "Fast support"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ]
+    },
+    "tiles": {
+      "type": "sno-tiles",
+      "settings": {
+        "eyebrow": "Shop",
+        "heading": "Four categories. <em>One</em> goal.",
+        "note": "Face, hair, body and sleep tools. Everything that belongs in a routine you will actually stick to."
+      },
+      "blocks": {
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "collection": "face",
+            "products": [
+              "under-eye-patches",
+              "daily-face-cleanser",
+              "retinol-night-cream"
+            ]
+          }
+        },
+        "tile_6": {
+          "type": "tile",
+          "settings": {
+            "collection": "hair",
+            "products": [
+              "curl-defining-gel",
+              "curl-defining-cream",
+              "matte-clay"
+            ]
+          }
+        },
+        "tile_7": {
+          "type": "tile",
+          "settings": {
+            "collection": "body",
+            "products": [
+              "charcoal-body-bar",
+              "tallow-deodorant"
+            ]
+          }
+        },
+        "tile_8": {
+          "type": "tile",
+          "settings": {
+            "collection": "sleep-tools",
+            "products": [
+              "mouth-tape",
+              "nose-strips",
+              "water-flosser"
+            ]
+          }
+        }
+      },
+      "block_order": [
+        "tile_5",
+        "tile_6",
+        "tile_7",
+        "tile_8"
+      ]
+    },
+    "featured": {
+      "type": "sno-featured",
+      "settings": {
+        "eyebrow": "Trending",
+        "heading": "Hot <em>right now.</em>",
+        "note": "The products people are buying the most right now.",
+        "products": [
+          "tallow-balm",
+          "under-eye-patches",
+          "hair-beard-trimmer",
+          "curl-defining-cream",
+          "sea-salt-spray",
+          "mouth-tape"
+        ],
+        "tags": "trend,bestseller",
+        "limit": 6
+      }
+    },
+    "band": {
+      "type": "sno-band",
+      "settings": {
+        "eyebrow": "The routine",
+        "heading": "Five minutes. <em>Every</em> morning.",
+        "btn_label": "See the routine",
+        "btn_link": "shopify://pages/routine"
+      }
+    },
+    "values": {
+      "type": "sno-values",
+      "settings": {
+        "eyebrow": "Why us",
+        "heading": "Less hype. <em>More</em> routine.",
+        "link_label": "More about us",
+        "link": "shopify://pages/about"
+      },
+      "blocks": {
+        "point_9": {
+          "type": "point",
+          "settings": {
+            "title": "Curated",
+            "text": "We only stock products that have sold thousands of times and are well reviewed. No filler."
+          }
+        },
+        "point_10": {
+          "type": "point",
+          "settings": {
+            "title": "Fair prices",
+            "text": "Trending products without the influencer markup. Free shipping on orders over [free]."
+          }
+        },
+        "point_11": {
+          "type": "point",
+          "settings": {
+            "title": "Honest",
+            "text": "No miracle promises and no bone smashing. Just routines that make sense, and support that actually replies."
+          }
+        }
+      },
+      "block_order": [
+        "point_9",
+        "point_10",
+        "point_11"
+      ]
+    },
+    "newsletter": {
+      "type": "sno-newsletter",
+      "settings": {
+        "success": "You're in. Your code: WELCOME10 (10% off your first order).",
+        "eyebrow": "Club",
+        "heading": "10% off your <em>first</em> order.",
+        "sub": "New drops, routine guides and zero spam. Unsubscribe anytime.",
+        "button": "Sign up",
+        "note": "No spam. Unsubscribe anytime."
+      }
+    },
+    "sets": {
+      "type": "sno-featured",
+      "settings": {
+        "eyebrow": "Kits",
+        "heading": "Bundle <em>& save.</em>",
+        "note": "Complete routines for less than buying each product on its own. Or build your own in Your Routine.",
+        "products": [
+          "starter-face-kit",
+          "skin-care-kit",
+          "styling-kit",
+          "curl-kit",
+          "night-routine-set",
+          "fresh-body-kit"
+        ],
+        "tags": "set",
+        "limit": 6
+      }
+    },
+    "routine_cta": {
+      "type": "sno-quiz-cta",
+      "settings": {
+        "eyebrow": "Your Routine",
+        "heading": "Don't know what you need? <em>Find your routine now.</em>",
+        "text": "Four quick questions. Then grab single products or your whole routine with 15% off.",
+        "btn_label": "Find your routine",
+        "link": "shopify://pages/your-routine",
+        "tight": true
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "strip",
+    "tiles",
+    "routine_cta",
+    "featured",
+    "sets",
+    "band",
+    "values",
+    "newsletter"
+  ]
+}

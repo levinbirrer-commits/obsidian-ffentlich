@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "heading": {
+      "type": "sno-text-hero",
+      "settings": {
+        "eyebrow": "Contact",
+        "heading": "Talk to <em>us.</em>",
+        "text": "Questions about an order or a product? We reply within one business day."
+      }
+    },
+    "main": {
+      "type": "sno-contact",
+      "settings": {
+        "button": "Send",
+        "success": "Thanks. We will get back to you soon."
+      }
+    }
+  },
+  "order": [
+    "heading",
+    "main"
+  ]
+}

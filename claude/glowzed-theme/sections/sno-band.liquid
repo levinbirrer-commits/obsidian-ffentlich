@@ -1,0 +1,24 @@
+<section class="band">
+  <div class="wrap band__inner">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+    {%- if section.settings.btn_label != blank -%}
+      <a class="btn btn--solid" href="{{ section.settings.btn_link | default: routes.root_url }}">{{ section.settings.btn_label }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Banner with button",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "The routine" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "HTML allowed, e.g. <em>Every</em>", "default": "Five minutes. <em>Every</em> morning." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "See the routine" },
+    { "type": "url", "id": "btn_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Banner with button" }]
+}
+{% endschema %}

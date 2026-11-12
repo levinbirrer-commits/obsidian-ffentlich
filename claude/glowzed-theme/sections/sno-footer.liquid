@@ -1,0 +1,154 @@
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="{{ routes.root_url }}" class="logo">{{ settings.logo_text | default: settings.brand | default: shop.name }}</a>
+        {%- if section.settings.mission != blank -%}<p class="footer__mission">{{ section.settings.mission }}</p>{%- endif -%}
+        <div class="socials">
+          {%- if settings.tiktok != blank %}<a href="{{ settings.tiktok }}">TikTok</a>{% endif -%}
+          {%- if settings.instagram != blank %}<a href="{{ settings.instagram }}">Instagram</a>{% endif -%}
+          {%- if settings.youtube != blank %}<a href="{{ settings.youtube }}">YouTube</a>{% endif -%}
+        </div>
+      </div>
+      {%- if section.settings.menu_1 != blank -%}
+        <div>
+          <h4>{{ section.settings.title_1 | default: section.settings.menu_1.title }}</h4>
+          <ul>{%- for link in section.settings.menu_1.links -%}<li><a href="{{ link.url }}">{{ link.title }}</a></li>{%- endfor -%}</ul>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.menu_2 != blank -%}
+        <div>
+          <h4>{{ section.settings.title_2 | default: section.settings.menu_2.title }}</h4>
+          <ul>{%- for link in section.settings.menu_2.links -%}<li><a href="{{ link.url }}">{{ link.title }}</a></li>{%- endfor -%}</ul>
+        </div>
+      {%- endif -%}
+      <div>
+        <h4>{{ section.settings.title_3 }}</h4>
+        <ul>
+          {%- for policy in shop.policies -%}
+            <li><a href="{{ policy.url }}">{%- if policy.url contains 'legal-notice' -%}{{ 'sno.footer.impressum' | t }}{%- else -%}{{ policy.title }}{%- endif -%}</a></li>
+          {%- else -%}
+            <li><span class="muted-note">Add your policies in Settings → Policies</span></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© {{ 'now' | date: '%Y' }} {{ settings.brand | default: shop.name }}{% if section.settings.bottom_text != blank %} · {{ section.settings.bottom_text }}{% endif %}</span>
+      {%- if localization.available_countries.size > 1 -%}
+        {%- comment -%} Länder-/Währungsauswahl: eigenes Menü statt nativem Auswahlfeld, funktioniert auch ohne JavaScript {%- endcomment -%}
+        {%- form 'localization', class: 'loc' -%}
+          <span class="loc__label" id="loc-label">{{ 'sno.footer.ship_to' | t }}</span>
+          <details class="loc__wrap">
+            <summary class="loc__btn" aria-labelledby="loc-label loc-current">
+              <span class="loc__cur">{{ localization.country.currency.iso_code }}</span>
+              <span id="loc-current">{{ localization.country.name }}</span>
+              <svg class="loc__chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 7.5 6 4l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <ul class="loc__list">
+              {%- for c in localization.available_countries -%}
+                {%- assign on = false -%}
+                {%- if c.iso_code == localization.country.iso_code -%}{%- assign on = true -%}{%- endif -%}
+                <li>
+                  <button type="submit" name="country_code" value="{{ c.iso_code }}" class="loc__opt"{% if on %} aria-current="true"{% endif %}>
+                    <span class="loc__cur">{{ c.currency.iso_code }}</span>
+                    <span>{{ c.name }}</span>
+                    {%- if on -%}<svg class="loc__tick" viewBox="0 0 12 12" aria-hidden="true"><path d="m2.5 6.3 2.3 2.2 4.7-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endif -%}
+                  </button>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        {%- endform -%}
+      {%- endif -%}
+      {%- if localization.available_languages.size > 1 -%}
+        {%- comment -%} Sprache: Klick speichert die Wahl (Cookie glz_lang), dann wählt das Theme die Sprache nicht mehr automatisch {%- endcomment -%}
+        {%- form 'localization', class: 'lang' -%}
+          <span class="loc__label">{{ 'sno.footer.language' | t }}</span>
+          {%- for l in localization.available_languages -%}
+            <button type="submit" name="language_code" value="{{ l.iso_code }}" class="lang__opt" lang="{{ l.iso_code }}"{% if l.iso_code == localization.language.iso_code %} aria-current="true"{% endif %}>{{ l.endonym_name | capitalize }}</button>
+          {%- endfor -%}
+        {%- endform -%}
+      {%- endif -%}
+      <div class="pay">
+        {%- for type in shop.enabled_payment_types -%}
+          <span>{{ type | replace: '_', ' ' | capitalize }}</span>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+.loc { display: flex; align-items: center; gap: 10px; }
+.loc__label { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.loc__wrap { position: relative; }
+.loc__btn {
+  list-style: none; display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 14px 0 5px;
+  border-radius: 999px; cursor: pointer; color: var(--text); font-size: 12px; user-select: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .02));
+  border: 1px solid var(--line-strong); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+  transition: border-color .2s, background .2s;
+}
+.loc__btn::-webkit-details-marker { display: none; }
+.loc__btn::marker { content: ""; }
+/* Das globale +/× der FAQ-Akkordeons hier ausblenden */
+.loc__btn::after, .loc__wrap[open] .loc__btn::after { content: none; display: none; }
+.loc__btn:hover, .loc__wrap[open] .loc__btn { border-color: rgba(255, 255, 255, .42); }
+.loc__btn:focus-visible { outline: 2px solid rgba(255, 255, 255, .6); outline-offset: 2px; }
+.loc__cur {
+  display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 999px;
+  font-size: 10px; font-weight: 600; letter-spacing: .08em; background: #f4f4f6; color: #050505;
+}
+.loc__chev { width: 11px; height: 11px; opacity: .7; transition: transform .2s; transform: rotate(180deg); }
+.loc__wrap[open] .loc__chev { transform: rotate(0deg); }
+.loc__list {
+  position: absolute; left: 0; bottom: calc(100% + 10px); z-index: 30; min-width: 240px;
+  margin: 0; padding: 6px; list-style: none; border-radius: 18px;
+  border: 1px solid var(--line-strong); background: rgba(14, 14, 16, .97);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: 0 26px 50px -18px rgba(0, 0, 0, .95), inset 0 1px 0 rgba(255, 255, 255, .08);
+  animation: locIn .18s ease;
+}
+@keyframes locIn { from { opacity: 0; transform: translateY(6px); } }
+.loc__opt {
+  width: 100%; display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 0; border-radius: 12px;
+  background: none; color: var(--text); font: inherit; font-size: 13px; text-align: left; cursor: pointer; transition: background .15s;
+}
+.loc__opt:hover, .loc__opt:focus-visible { background: rgba(255, 255, 255, .07); outline: none; }
+.loc__opt[aria-current="true"] { background: rgba(255, 255, 255, .1); }
+.loc__opt .loc__cur { background: transparent; color: var(--muted); border: 1px solid var(--line-strong); min-width: 44px; justify-content: center; }
+.loc__opt[aria-current="true"] .loc__cur { background: #f4f4f6; color: #050505; border-color: #f4f4f6; }
+.loc__tick { width: 13px; height: 13px; margin-left: auto; }
+.lang { display: flex; align-items: center; gap: 8px; }
+.lang__opt {
+  height: 30px; padding: 0 12px; border-radius: 999px; cursor: pointer; font: inherit; font-size: 12px;
+  background: none; color: var(--muted); border: 1px solid var(--line-strong); transition: border-color .2s, color .2s;
+}
+.lang__opt:hover { color: var(--text); border-color: rgba(255, 255, 255, .42); }
+.lang__opt:focus-visible { outline: 2px solid rgba(255, 255, 255, .6); outline-offset: 2px; }
+.lang__opt[aria-current="true"] { background: #f4f4f6; color: #050505; border-color: #f4f4f6; }
+@media (prefers-reduced-motion: reduce) { .loc__list { animation: none; } .loc__chev { transition: none; } }
+</style>
+{%- comment -%} Öffnen/Schließen samt Animation steuert assets/sno.js {%- endcomment -%}
+<script>
+document.addEventListener('click', function (e) {
+  var b = e.target.closest ? e.target.closest('.lang__opt') : null;
+  if (b) { try { document.cookie = 'glz_lang=' + b.value + ';path=/;max-age=31536000;samesite=lax'; } catch (x) {} }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "text", "id": "mission", "label": "Text under the logo", "default": "Grooming that works. Fair prices, fast support, no BS." },
+    { "type": "link_list", "id": "menu_1", "label": "Column 1 menu", "default": "main-menu" },
+    { "type": "text", "id": "title_1", "label": "Column 1 title", "default": "Shop" },
+    { "type": "link_list", "id": "menu_2", "label": "Column 2 menu", "default": "footer" },
+    { "type": "text", "id": "title_2", "label": "Column 2 title", "default": "Help" },
+    { "type": "text", "id": "title_3", "label": "Policies column title", "default": "Legal" },
+    { "type": "text", "id": "bottom_text", "label": "Bottom line text", "default": "All prices in [currency], plus shipping", "info": "[currency] = the customer's currency (CHF, USD)" }
+  ]
+}
+{% endschema %}

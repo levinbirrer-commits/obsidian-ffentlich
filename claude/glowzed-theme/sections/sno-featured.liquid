@@ -1,0 +1,63 @@
+{%- comment -%}
+  Produktraster. Entweder feste Produktauswahl oder automatisch: Produkte mit bestimmten Tags.
+  Wird auf der Startseite (Trending) und in der Routine (Abends) benutzt.
+{%- endcomment -%}
+{%- liquid
+  assign tags = section.settings.tags | split: ','
+  assign source = section.settings.collection.products
+  if section.settings.collection == blank
+    assign source = collections.all.products
+  endif
+-%}
+<section class="section cat">
+  <div class="wrap">
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank -%}
+      <div class="section__head">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+          <h2>{{ section.settings.heading }}</h2>
+        </div>
+        {%- if section.settings.note != blank -%}<p class="section__note">{{ section.settings.note }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="grid">
+      {%- if section.settings.products != blank -%}
+        {%- for p in section.settings.products -%}
+          {%- render 'sno-card', product: p -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign shown = 0 -%}
+        {%- for p in source -%}
+          {%- if shown >= section.settings.limit -%}{%- break -%}{%- endif -%}
+          {%- assign match = false -%}
+          {%- for t in tags -%}
+            {%- assign tt = t | strip -%}
+            {%- if tt == blank or p.tags contains tt -%}{%- assign match = true -%}{%- endif -%}
+          {%- endfor -%}
+          {%- if tags.size == 0 -%}{%- assign match = true -%}{%- endif -%}
+          {%- if match -%}
+            {%- render 'sno-card', product: p -%}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Trending" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "HTML allowed, e.g. <em>right now.</em>", "default": "Hot <em>right now.</em>" },
+    { "type": "text", "id": "note", "label": "Text", "default": "The products people are buying the most right now." },
+    { "type": "product_list", "id": "products", "label": "Pick products", "info": "If you pick products here, the automatic selection below is ignored", "limit": 12 },
+    { "type": "header", "content": "Automatic selection" },
+    { "type": "collection", "id": "collection", "label": "From collection", "info": "Empty = all products" },
+    { "type": "text", "id": "tags", "label": "Only products with these tags", "info": "Comma separated, e.g. trend,bestseller. Empty = all", "default": "trend,bestseller" },
+    { "type": "range", "id": "limit", "label": "Number of products", "min": 3, "max": 12, "step": 3, "default": 6 }
+  ],
+  "presets": [{ "name": "Product grid" }]
+}
+{% endschema %}

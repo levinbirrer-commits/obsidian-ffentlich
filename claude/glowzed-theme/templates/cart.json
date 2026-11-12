@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "main": {
+      "type": "sno-cart",
+      "settings": {
+        "bundle_code": "ROUTINE",
+        "bundle_min": 3,
+        "bundle_percent": 15,
+        "bundle_step": 0,
+        "bundle_max": 15,
+        "bundle_label": "Bundle discount",
+        "tier_up": "Your bundle now qualifies for [p]% off.",
+        "apply_label": "Apply",
+        "tier_next": "Add [n] more product for [p]% off.",
+        "tier_keep": "Add [n] more product(s) to get your bundle discount back."
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

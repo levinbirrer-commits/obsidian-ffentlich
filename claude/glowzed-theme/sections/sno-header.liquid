@@ -1,0 +1,77 @@
+{%- capture logo -%}
+  {%- if settings.logo -%}
+    <img src="{{ settings.logo | image_url: width: 300 }}" alt="{{ settings.brand | default: shop.name | escape }}" class="logo__img" width="150" height="{{ 150 | divided_by: settings.logo.aspect_ratio | round }}">
+  {%- else -%}
+    {{ settings.logo_text | default: settings.brand | default: shop.name }}
+  {%- endif -%}
+{%- endcapture -%}
+{%- if settings.announcement != blank -%}
+  <div class="announce">{{ settings.announcement }}</div>
+{%- endif -%}
+<header class="header" id="header">
+  <div class="wrap header__inner">
+    <nav class="nav" aria-label="{{ 'sno.header.main_nav' | t }}">
+      {%- for link in section.settings.menu_left.links -%}
+        {%- render 'sno-navlink', link: link -%}
+      {%- endfor -%}
+    </nav>
+    <button class="icon-btn menu-btn" id="menu-btn" aria-label="{{ 'sno.header.open_menu' | t }}" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+    </button>
+    <a href="{{ routes.root_url }}" class="logo" aria-label="{{ settings.brand | default: shop.name | escape }} – {{ 'sno.home' | t }}">{{ logo }}</a>
+    <div class="actions">
+      <nav class="nav nav--right" aria-label="{{ 'sno.header.info_nav' | t }}">
+        {%- for link in section.settings.menu_right.links -%}
+          {%- render 'sno-navlink', link: link -%}
+        {%- endfor -%}
+      </nav>
+      <a class="icon-btn" href="{{ routes.search_url }}" aria-label="{{ 'sno.header.search' | t }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      </a>
+      {%- if shop.customer_accounts_enabled and section.settings.show_account -%}
+        {%- render 'sno-account', s: section.settings -%}
+      {%- endif -%}
+      <a class="icon-btn cart-btn" href="{{ routes.cart_url }}" aria-label="{{ 'sno.header.cart' | t }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8h14l-1.2 12H6.2L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+        <span class="cart-count{% if cart.item_count > 0 %} on{% endif %}">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+  <nav class="mobile-nav" aria-label="{{ 'sno.header.mobile_nav' | t }}">
+    <a href="{{ routes.root_url }}">{{ 'sno.home' | t }}</a>
+    {%- for link in section.settings.menu_left.links -%}{%- render 'sno-navlink', link: link -%}{%- endfor -%}
+    {%- for link in section.settings.menu_right.links -%}{%- render 'sno-navlink', link: link -%}{%- endfor -%}
+  </nav>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "link_list", "id": "menu_left", "label": "Menu left (categories)", "default": "main-menu" },
+    { "type": "link_list", "id": "menu_right", "label": "Menu right (info pages)" },
+    { "type": "checkbox", "id": "show_account", "label": "Show account icon", "default": false },
+    { "type": "header", "content": "Sign-in panel" },
+    { "type": "paragraph", "content": "Opens from the account icon. Customers enter their email, get a one-time code from Shopify and come back to the same page. A new email automatically gets a new account. Links to #sign-in or #sign-up anywhere in the shop open the panel." },
+    { "type": "text", "id": "acct_tab_in", "label": "Tab: sign in", "default": "Sign in" },
+    { "type": "text", "id": "acct_tab_up", "label": "Tab: create account", "default": "Create account" },
+    { "type": "text", "id": "acct_title", "label": "Sign in: heading", "info": "The logo text follows automatically", "default": "Sign in to" },
+    { "type": "text", "id": "acct_text", "label": "Sign in: text", "default": "No password needed. We email you a 6-digit code." },
+    { "type": "text", "id": "acct_btn", "label": "Sign in: button", "default": "Continue" },
+    { "type": "text", "id": "acct_up_title", "label": "Create account: heading", "info": "The logo text follows automatically", "default": "Join" },
+    { "type": "text", "id": "acct_up_text", "label": "Create account: text", "default": "Just your email, no password. Confirm the 6-digit code we send you and your account is ready." },
+    { "type": "text", "id": "acct_up_btn", "label": "Create account: button", "default": "Create account" },
+    { "type": "text", "id": "acct_perks", "label": "Benefits", "info": "Separate with |", "default": "Track every order | Reorder in one tap | Faster checkout with saved details" },
+    { "type": "text", "id": "acct_fine", "label": "Under sign in", "info": "Followed by a link to the other tab", "default": "New here?" },
+    { "type": "text", "id": "acct_fine_up", "label": "Under create account", "info": "Followed by a link to the other tab", "default": "Already have an account?" },
+    { "type": "header", "content": "Signed in" },
+    { "type": "text", "id": "acct_hello", "label": "Greeting", "info": "The first name follows, e.g. Welcome back, Levin.", "default": "Welcome back," },
+    { "type": "text", "id": "acct_add_name", "label": "Link when the first name is missing", "default": "Add your name" },
+    { "type": "text", "id": "acct_toast", "label": "Short note after signing in", "info": "[name] = first name", "default": "Hey [name], you're signed in." },
+    { "type": "text", "id": "acct_toast_new", "label": "Short note after creating an account", "info": "[brand] = shop name", "default": "Welcome to [brand]. Your account is ready." },
+    { "type": "text", "id": "acct_orders", "label": "Orders button", "default": "Orders & tracking" },
+    { "type": "text", "id": "acct_first_title", "label": "No orders yet: title", "default": "Find your routine" },
+    { "type": "text", "id": "acct_first_text", "label": "No orders yet: text", "default": "4 quick questions →" }
+  ]
+}
+{% endschema %}

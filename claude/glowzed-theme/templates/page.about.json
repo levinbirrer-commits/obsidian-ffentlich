@@ -1,0 +1,104 @@
+{
+  "sections": {
+    "heading": {
+      "type": "sno-text-hero",
+      "settings": {
+        "eyebrow": "About us",
+        "heading": "Less <em>hype.</em>",
+        "text": "We pick out the products that actually work and have proven themselves, and sell them at fair prices."
+      }
+    },
+    "values": {
+      "type": "sno-values",
+      "settings": {
+        "eyebrow": "Why us",
+        "heading": "Curated. <em>Fair.</em> Honest.",
+        "link_label": ""
+      },
+      "blocks": {
+        "point_19": {
+          "type": "point",
+          "settings": {
+            "title": "Curated",
+            "text": "We only stock products that have sold thousands of times and are well reviewed. No filler."
+          }
+        },
+        "point_20": {
+          "type": "point",
+          "settings": {
+            "title": "Fair prices",
+            "text": "Trending products without the influencer markup. Free shipping on orders over [free]."
+          }
+        },
+        "point_21": {
+          "type": "point",
+          "settings": {
+            "title": "Honest",
+            "text": "No miracle promises and no bone smashing. Just routines that make sense, and support that actually replies."
+          }
+        }
+      },
+      "block_order": [
+        "point_19",
+        "point_20",
+        "point_21"
+      ]
+    },
+    "manifest": {
+      "type": "sno-manifest",
+      "settings": {
+        "eyebrow": "Our stance",
+        "heading": "No bone smashing. <em>Ever.</em>",
+        "text_1": "Looksmaxxing has turned into a race for the riskiest method. We are not part of it.",
+        "text_2": "We sell what makes sense: skincare, hair styling, sleep tools. Things you use every day that don't hurt.",
+        "col_left": "Hardmaxxing",
+        "col_right": ""
+      },
+      "blocks": {
+        "row_22": {
+          "type": "row",
+          "settings": {
+            "left": "Hitting your jaw with a hammer",
+            "right": "Facial massage with gua sha"
+          }
+        },
+        "row_23": {
+          "type": "row",
+          "settings": {
+            "left": "Risk: fractures, asymmetry, nerve damage",
+            "right": "Risk: you get used to the routine"
+          }
+        },
+        "row_24": {
+          "type": "row",
+          "settings": {
+            "left": "Miracle promises & fake before-and-afters",
+            "right": "Honest product descriptions"
+          }
+        }
+      },
+      "block_order": [
+        "row_22",
+        "row_23",
+        "row_24"
+      ]
+    },
+    "newsletter": {
+      "type": "sno-newsletter",
+      "settings": {
+        "eyebrow": "Club",
+        "heading": "10% off your <em>first</em> order.",
+        "sub": "New drops, routine guides and zero spam. Unsubscribe anytime.",
+        "button": "Sign up",
+        "success": "You're in. Your code: WELCOME10 (10% off your first order).",
+        "note": "No spam. Unsubscribe anytime."
+      }
+    }
+  },
+  "order": [
+    "heading",
+    "values",
+    "manifest",
+    "newsletter"
+  ]
+}

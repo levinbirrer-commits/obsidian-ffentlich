@@ -1,0 +1,112 @@
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign cat = product.collections.first
+  assign size = product.metafields.custom.size.value
+  assign deliv = product.metafields.custom.delivery.value | default: section.settings.default_delivery | split: '-'
+  assign dmin = deliv[0] | plus: 0
+  assign dmax = deliv[1] | default: deliv[0] | plus: 0
+  assign days = dmin | append: '–' | append: dmax
+  assign free = '[free]'
+-%}
+<div class="wrap pdp-wrap">
+  <nav class="crumbs"><a href="{{ routes.root_url }}">{{ 'sno.home' | t }}</a>{% if cat %} / <a href="{{ cat.url }}">{{ cat.title }}</a>{% endif %} / {{ product.title }}</nav>
+  <div class="pdp">
+    <div class="pdp__media pdp__media--photo stage">
+      {%- render 'sno-img', product: product -%}
+    </div>
+    <div class="pdp__info">
+      <span class="eyebrow">{{ cat.title }}{% if cat and size != blank %} · {% endif %}{{ size }}</span>
+      <h1>{{ product.title }}</h1>
+      <div class="modal__price">
+        {%- if variant.compare_at_price > variant.price %}<s>{{ variant.compare_at_price | money }}</s>{% endif -%}
+        {{ variant.price | money }} <small class="pdp__unit">{{ section.settings.price_note }}</small>
+      </div>
+      {%- if product.metafields.custom.tagline != blank -%}
+        <p class="modal__tag">{{ product.metafields.custom.tagline.value }}</p>
+      {%- endif -%}
+      <div class="modal__desc rte">{{ product.description }}</div>
+
+      {%- form 'product', product, class: 'buy' -%}
+        {%- if product.has_only_default_variant -%}
+          <input type="hidden" name="id" value="{{ variant.id }}">
+        {%- else -%}
+          <select name="id" class="variant-select" aria-label="{{ 'sno.variant' | t }}">
+            {%- for v in product.variants -%}
+              <option value="{{ v.id }}"{% if v == variant %} selected{% endif %}{% unless v.available %} disabled{% endunless %}>{{ v.title }} · {{ v.price | money }}</option>
+            {%- endfor -%}
+          </select>
+        {%- endif -%}
+        <div class="qty" aria-label="{{ 'sno.quantity' | t }}">
+          <button type="button" data-step="-1" aria-label="{{ 'sno.less' | t }}">−</button>
+          <input type="number" name="quantity" value="1" min="1" max="20" aria-label="{{ 'sno.quantity' | t }}">
+          <button type="button" data-step="1" aria-label="{{ 'sno.more' | t }}">+</button>
+        </div>
+        <button class="btn btn--solid" type="submit"{% unless variant.available %} disabled{% endunless %}>
+          {%- if variant.available %}{{ 'sno.add_to_cart' | t }}{% else %}{{ 'sno.sold_out' | t }}{% endif -%}
+        </button>
+      {%- endform -%}
+
+      {%- if section.settings.show_delivery -%}
+        <p class="pdp__ship">{{ 'sno.estimated_delivery' | t }} <strong>{% render 'sno-eta', min: dmin, max: dmax %}</strong> ({{ 'sno.days' | t | replace: '[days]', days }}) · {{ 'sno.free_shipping_over' | t | replace: '[free]', free }}</p>
+      {%- endif -%}
+
+      <div class="pdp__acc">
+        {%- for block in section.blocks -%}
+          <details {{ block.shopify_attributes }}>
+            <summary>{{ block.settings.title }}</summary>
+            <div class="answer">{{ block.settings.text | replace: '[days]', days | replace: '[free]', free }}</div>
+          </details>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if section.settings.show_related and cat -%}
+  <section class="section cat">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <span class="eyebrow">{{ section.settings.related_eyebrow }}</span>
+          <h2>{{ section.settings.related_heading }}</h2>
+        </div>
+      </div>
+      <div class="grid">
+        {%- assign shown = 0 -%}
+        {%- for p in cat.products -%}
+          {%- if shown >= section.settings.related_count -%}{%- break -%}{%- endif -%}
+          {%- unless p.id == product.id -%}
+            {%- render 'sno-card', product: p -%}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    { "type": "text", "id": "price_note", "label": "Text next to the price" },
+    { "type": "checkbox", "id": "show_delivery", "label": "Show estimated delivery date", "default": true },
+    { "type": "text", "id": "default_delivery", "label": "Default delivery time in days", "info": "Used when the product has no value in the metafield “Lieferzeit”. Format: 8-15", "default": "8-15" },
+    { "type": "header", "content": "Related products" },
+    { "type": "checkbox", "id": "show_related", "label": "Show products from the same collection", "default": true },
+    { "type": "text", "id": "related_eyebrow", "label": "Small heading", "default": "Recommended" },
+    { "type": "text", "id": "related_heading", "label": "Heading", "info": "HTML allowed", "default": "Pairs <em>well</em>" },
+    { "type": "range", "id": "related_count", "label": "Number of products", "min": 3, "max": 6, "step": 1, "default": 3 }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Info tab",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Ingredients" },
+        { "type": "richtext", "id": "text", "label": "Text", "info": "[days] = delivery time of the product, [free] = free shipping amount", "default": "<p>You will find the full ingredient list on the packaging.</p>" }
+      ]
+    }
+  ]
+}
+{% endschema %}

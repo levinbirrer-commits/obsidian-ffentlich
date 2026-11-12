@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "heading": {
+      "type": "sno-text-hero",
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Honest <em>answers.</em>",
+        "text": "Everything about shipping, orders and how to use our products. Missing something? Message us."
+      }
+    },
+    "faq": {
+      "type": "sno-faq",
+      "settings": {
+        "eyebrow": "Common questions",
+        "open_first": true
+      },
+      "blocks": {
+        "question_25": {
+          "type": "question",
+          "settings": {
+            "question": "How fast is shipping?",
+            "answer": "<p>Most orders arrive within [delivery] days. Every product page shows its estimated delivery date. If you order several products, they may arrive in separate parcels. You get a tracking number as soon as your order ships, and shipping is free on orders over [free].</p>"
+          }
+        },
+        "question_26": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return something?",
+            "answer": "<p>If your order arrives damaged, defective or isn't what you ordered, message us within 14 days of delivery with a photo. We'll send a replacement or refund you, and you don't have to send anything back.</p><p><strong>Switzerland and USA:</strong> we don't take returns if you simply changed your mind, because our products are cosmetics, personal care items and grooming tools.</p><p><strong>EU:</strong> you can withdraw from your order within 14 days of delivery without giving a reason. Hygiene products such as creams, serums, deodorants, patches or mouth tape can only be returned if their seal is unopened. All details are in our <a href=\"/policies/refund-policy\">refund policy</a>.</p>"
+          }
+        },
+        "question_27": {
+          "type": "question",
+          "settings": {
+            "question": "Is mouth tape safe?",
+            "answer": "<p>Mouth tape gently keeps your lips closed while you sleep so you breathe through your nose. If you have trouble breathing through your nose, snore heavily or have breathing pauses, talk to a doctor first.</p>"
+          }
+        },
+        "question_28": {
+          "type": "question",
+          "settings": {
+            "question": "Will gua sha change my jawline?",
+            "answer": "<p>Not your bones. Gua sha is a massage technique: it feels relaxing and can make your face look less puffy in the morning.</p>"
+          }
+        },
+        "question_29": {
+          "type": "question",
+          "settings": {
+            "question": "How do I use retinol correctly?",
+            "answer": "<p>Start slow: 2–3 nights a week, then build up. Always wear sunscreen in the morning. Don't start it at the same time as other strong actives.</p>"
+          }
+        },
+        "question_customs": {
+          "type": "question",
+          "settings": {
+            "question": "Will I pay customs or import fees?",
+            "answer": "<p><strong>Switzerland:</strong> usually not. Import VAT is only collected when it adds up to more than CHF 5, which is roughly orders above CHF 60. Large orders may arrive in several smaller parcels.</p><p><strong>USA:</strong> parcels from abroad can be charged import duties. If any apply, they're collected by the carrier on delivery.</p><p><strong>EU:</strong> import VAT applies to every parcel from outside the EU. If it isn't already paid, the carrier collects it on delivery, sometimes with a small handling fee.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question_25",
+        "question_customs",
+        "question_26",
+        "question_27",
+        "question_28",
+        "question_29"
+      ]
+    }
+  },
+  "order": [
+    "heading",
+    "faq"
+  ]
+}

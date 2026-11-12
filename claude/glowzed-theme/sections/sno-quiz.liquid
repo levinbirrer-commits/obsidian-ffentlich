@@ -1,0 +1,551 @@
+{%- comment -%}
+  Routine-Quiz mit Verzweigung und persönlichem Bundle.
+  - Fragen sind Blöcke. Antworten zeilenweise: „Antwort | quiz-tag1, quiz-tag2“.
+  - „Show only after“: Die Frage erscheint nur, wenn eine frühere Antwort einen dieser Tags hat (z. B. quiz-hair).
+  - Ergebnis: Bundle aus Einzelprodukten (Tags mit „quiz-“), anpassbar, mit Rabattcode.
+    Produkte mit dem Tag „set“ erscheinen separat als fertige Kits.
+  - Tags „quiz-slot-…“: Von Produkten mit demselben Slot kommt höchstens eines ins Bundle.
+{%- endcomment -%}
+<style>
+.quiz [hidden] { display: none !important; }
+.quiz__wrap { max-width: 1120px; }
+.quiz__head { text-align: center; max-width: 640px; margin: 0 auto 34px; }
+.quiz__intro { color: var(--muted); margin-top: 12px; }
+.quiz__panel {
+  padding: clamp(22px, 4vw, 46px); border-radius: var(--r);
+  border: 1px solid rgba(255, 255, 255, .075);
+  background: var(--speckle-soft) 0 0 / 420px 420px, var(--lacquer);
+  box-shadow: var(--hi), 0 34px 60px -34px rgba(0, 0, 0, .95);
+}
+.quiz__progress { display: flex; gap: 6px; justify-content: center; margin-bottom: 28px; min-height: 3px; }
+.quiz__progress i { width: 30px; height: 3px; border-radius: 3px; background: var(--line-strong); transition: background .3s; }
+.quiz__progress i.on { background: var(--text); }
+.quiz__step { border: 0; margin: 0; padding: 0; min-width: 0; }
+.quiz__q { display: block; width: 100%; padding: 0; text-align: center; font-size: clamp(20px, 2.6vw, 28px); line-height: 1.25; margin-bottom: 24px; color: var(--text); }
+.quiz__q span { display: block; font-size: 12px; letter-spacing: .16em; color: var(--muted); margin-bottom: 10px; min-height: 1em; }
+.quiz__opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.quiz__opt {
+  font: inherit; font-size: 15px; color: var(--text); text-align: left; padding: 18px 20px; border-radius: 16px; cursor: pointer;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .015));
+  border: 1px solid var(--line-strong); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+  transition: border-color .2s, transform .2s, background .2s;
+}
+.quiz__opt:hover, .quiz__opt:focus-visible { border-color: rgba(255, 255, 255, .55); background: linear-gradient(180deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, .03)); transform: translateY(-1px); }
+.quiz__back { display: block; margin: 22px auto 0; background: none; border: 0; color: var(--muted); font: inherit; font-size: 13px; cursor: pointer; }
+.quiz__back:hover { color: var(--text); }
+.quiz__result { text-align: center; }
+.quiz__result h2 { margin: 8px 0 28px; }
+.quiz__grid { text-align: left; }
+.quiz__sub { text-align: left; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin: 44px 0 16px; }
+.quiz__pick {
+  position: absolute; top: 12px; right: 12px; z-index: 5;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 32px; padding: 0 13px;
+  border-radius: 999px; border: 1px solid var(--line-strong); cursor: pointer;
+  font: inherit; font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--text);
+  background: rgba(10, 10, 12, .74); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: background .2s, color .2s, border-color .2s;
+}
+.quiz__pick::before { content: "+"; font-size: 14px; line-height: 1; letter-spacing: 0; }
+.quiz__pick[aria-pressed="true"] { background: #f4f4f6; color: #050505; border-color: #fff; }
+.quiz__pick[aria-pressed="true"]::before { content: "✓"; font-size: 12px; }
+.quiz .card { transition: border-color .25s; }
+.quiz .card.is-in { border-color: rgba(255, 255, 255, .34); }
+.quiz .card__form .btn.is-done { border-color: rgba(255, 255, 255, .6); }
+.quiz__sum {
+  position: sticky; bottom: 14px; z-index: 5; margin-top: 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px 24px; flex-wrap: wrap;
+  padding: 16px 18px 16px 24px; border-radius: 22px; text-align: left;
+  border: 1px solid var(--line-strong); background: rgba(14, 14, 16, .86);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .9);
+}
+.quiz__sum-count { display: block; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.quiz__sum-price { font-size: 22px; font-weight: 500; }
+.quiz__sum-price s { color: var(--muted); font-size: 15px; font-weight: 400; margin-right: 8px; }
+.quiz__sum-note { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.quiz__sum-note.is-on { color: var(--text); }
+.quiz__sum .btn { min-width: 220px; }
+.quiz__err { color: #ff8a80; font-size: 13px; margin: 8px 0 0; width: 100%; }
+.quiz__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+.quiz__empty { color: var(--muted); margin-bottom: 10px; }
+@media (max-width: 600px) {
+  .quiz__sum { padding: 14px 16px; }
+  .quiz__sum .btn { width: 100%; min-width: 0; }
+  .quiz__pick { top: 9px; right: 9px; padding: 0; width: 32px; }
+  .quiz__pick-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+</style>
+{%- liquid
+  assign cart_add = routes.cart_add_url | default: '/cart/add'
+  assign code = section.settings.bundle_code | strip
+-%}
+<section class="section quiz" id="quiz-{{ section.id }}"
+  data-count="{{ section.settings.result_count }}"
+  data-extra="{{ section.settings.extra_count }}"
+  data-kits="{{ section.settings.kits_count }}"
+  data-code="{{ code | escape }}"
+  data-pct="{{ section.settings.bundle_percent }}"
+  data-step="{{ section.settings.bundle_step }}"
+  data-max="{{ section.settings.bundle_max }}"
+  data-min="{{ section.settings.bundle_min }}"
+  data-l-next="{{ section.settings.sum_next | escape }}"
+  data-add="{{ cart_add }}.js"
+  data-cart="{{ routes.cart_url }}"
+  data-l-added="{{ section.settings.added_text | escape }}"
+  data-l-fail="{{ section.settings.fail_text | escape }}"
+  data-root="{{ routes.root_url }}"
+  data-money="{{ 123456 | money | strip_html | escape }}"
+  data-l-on="{{ section.settings.pick_on | escape }}"
+  data-l-off="{{ section.settings.pick_off | escape }}"
+  data-l-items="{{ section.settings.sum_items | escape }}"
+  data-l-more="{{ section.settings.sum_more | escape }}"
+  data-l-save="{{ section.settings.sum_save | escape }}">
+  <div class="wrap quiz__wrap">
+    <div class="quiz__head">
+      {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+      <h1 class="h2">{{ section.settings.heading }}</h1>
+      {%- if section.settings.intro != blank -%}<p class="quiz__intro">{{ section.settings.intro }}</p>{%- endif -%}
+    </div>
+
+    <div class="quiz__panel">
+      <div class="quiz__progress" aria-hidden="true"></div>
+
+      {%- for block in section.blocks -%}
+        {%- assign lines = block.settings.options | newline_to_br | split: '<br />' -%}
+        <fieldset class="quiz__step"{% unless forloop.first %} hidden{% endunless %}
+          data-weight="{{ block.settings.weight }}"
+          data-if="{{ block.settings.show_if | strip | escape }}"
+          data-must="{% if block.settings.must_match %}1{% endif %}"
+          data-strict="{% if block.settings.strict %}1{% endif %}" {{ block.shopify_attributes }}>
+          <legend class="quiz__q"><span class="quiz__num"></span>{{ block.settings.question }}</legend>
+          <div class="quiz__opts">
+            {%- for line in lines -%}
+              {%- assign parts = line | split: '|' -%}
+              {%- assign label = parts[0] | strip -%}
+              {%- if label != blank -%}
+                <button type="button" class="quiz__opt" data-tags="{{ parts[1] | strip | escape }}">{{ label }}</button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endfor -%}
+      <button type="button" class="quiz__back" hidden>{{ 'sno.quiz.back' | t }}</button>
+
+      <div class="quiz__result" hidden>
+        {%- if section.settings.result_eyebrow != blank -%}<span class="eyebrow">{{ section.settings.result_eyebrow }}</span>{%- endif -%}
+        <h2>{{ section.settings.result_heading }}</h2>
+
+        <div class="grid quiz__grid quiz__grid--bundle"></div>
+
+        <div class="quiz__sum">
+          <div>
+            <span class="quiz__sum-count"></span>
+            <span class="quiz__sum-price"></span>
+            <p class="quiz__sum-note"></p>
+          </div>
+          <button type="button" class="btn btn--solid quiz__all">{{ section.settings.all_label }}</button>
+          <p class="quiz__err" hidden>{{ section.settings.error_text }}</p>
+        </div>
+
+        <div class="quiz__more" hidden>
+          <h3 class="quiz__sub">{{ section.settings.extra_heading }}</h3>
+          <div class="grid quiz__grid quiz__grid--extra"></div>
+        </div>
+
+        <div class="quiz__kits" hidden>
+          <h3 class="quiz__sub">{{ section.settings.kits_heading }}</h3>
+          <div class="grid quiz__grid quiz__grid--kits"></div>
+        </div>
+
+        <p class="quiz__empty" hidden>{{ section.settings.empty_text }} <a href="{{ routes.all_products_collection_url }}">→</a></p>
+        <div class="quiz__actions">
+          <button type="button" class="btn btn--ghost quiz__restart">{{ section.settings.restart_label }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" class="quiz__data">[
+    {%- paginate collections.all.products by 250 -%}
+      {%- assign first = true -%}
+      {%- for p in collections.all.products -%}
+        {%- assign qt = '' -%}
+        {%- for t in p.tags -%}
+          {%- if t contains 'quiz-' -%}{%- assign qt = qt | append: t | append: ',' -%}{%- endif -%}
+        {%- endfor -%}
+        {%- if qt != blank and p.available -%}
+          {%- assign v = p.selected_or_first_available_variant -%}
+          {%- capture card -%}{%- render 'sno-card', product: p -%}{%- endcapture -%}
+          {%- unless first -%},{%- endunless -%}
+          {%- assign first = false -%}
+          {"t":{{ qt | json }},"v":{{ v.id | json }},"p":{{ v.price | json }},"k":{% if p.tags contains 'set' %}1{% else %}0{% endif %},"c":{{ card | strip | json }}}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endpaginate -%}
+  ]</script>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById('quiz-{{ section.id }}');
+  if (!root) return;
+  var cfg = root.dataset;
+  var data = [];
+  try { data = JSON.parse(root.querySelector('.quiz__data').textContent); } catch (e) {}
+
+  function split(s) {
+    return String(s || '').toLowerCase().split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+  }
+  function fill(tpl, map) {
+    return String(tpl || '').replace(/\[(\w+)\]/g, function (m, k) { return map[k] != null ? map[k] : m; });
+  }
+  // Formatiert Rappen/Cents wie der „money“-Filter der aktuellen Währung (Vorlage: 123456 → z. B. „CHF 1,234.56“ oder „$1,234.56“)
+  function money(cents) {
+    var sample = cfg.money || '';
+    var m = sample.match(/1([^0-9]?)234([^0-9]?)56/);
+    var n = (cents / 100).toFixed(2).split('.');
+    if (!m) return n.join('.');
+    n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, m[1]);
+    return sample.replace(m[0], n[0] + (m[2] || '.') + n[1]);
+  }
+
+  var steps = [].slice.call(root.querySelectorAll('.quiz__step'));
+  var meta = steps.map(function (s) {
+    return {
+      w: +s.dataset.weight || 1,
+      must: s.dataset.must === '1',
+      strict: s.dataset.strict === '1',
+      cond: split(s.dataset.if),
+      opts: [].slice.call(s.querySelectorAll('.quiz__opt')).map(function (o) { return split(o.dataset.tags); })
+    };
+  });
+  var progress = root.querySelector('.quiz__progress');
+  var backBtn = root.querySelector('.quiz__back');
+  var result = root.querySelector('.quiz__result');
+  var gridB = root.querySelector('.quiz__grid--bundle');
+  var gridX = root.querySelector('.quiz__grid--extra');
+  var gridK = root.querySelector('.quiz__grid--kits');
+  var more = root.querySelector('.quiz__more');
+  var kitsBox = root.querySelector('.quiz__kits');
+  var sum = root.querySelector('.quiz__sum');
+  var empty = root.querySelector('.quiz__empty');
+  var allBtn = root.querySelector('.quiz__all');
+  var err = root.querySelector('.quiz__err');
+
+  var items = data.map(function (d, i) {
+    var tags = split(d.t);
+    return { i: i, d: d, tags: tags, kit: d.k === 1, s: 0,
+      slots: tags.filter(function (t) { return t.indexOf('quiz-slot-') === 0; }) };
+  });
+
+  var hist = [], picks = {}, cur = -1, selected = {};
+
+  function tagSet(extra) {
+    var set = {};
+    hist.forEach(function (k) { picks[k].tags.forEach(function (t) { set[t] = 1; }); });
+    (extra || []).forEach(function (t) { set[t] = 1; });
+    return set;
+  }
+  function visible(k, set) {
+    var c = meta[k].cond;
+    return !c.length || c.some(function (t) { return set[t]; });
+  }
+  function nextFrom(k, set) {
+    for (var j = k + 1; j < steps.length; j++) if (visible(j, set)) return j;
+    return -1;
+  }
+  function countFrom(k, set) {
+    var n = 0;
+    for (var j = k + 1; j < steps.length; j++) if (visible(j, set)) n++;
+    return n;
+  }
+
+  function render() {
+    var done = cur < 0;
+    steps.forEach(function (s, k) { s.hidden = k !== cur; });
+    result.hidden = !done;
+    backBtn.hidden = done || !hist.length;
+    var total, pos;
+    if (done) { total = hist.length; pos = total; }
+    else {
+      var rest = 0;
+      var opts = meta[cur].opts.length ? meta[cur].opts : [[]];
+      opts.forEach(function (o) { rest = Math.max(rest, countFrom(cur, tagSet(o))); });
+      total = hist.length + 1 + rest;
+      pos = hist.length + 1;
+      var num = steps[cur].querySelector('.quiz__num');
+      if (num) num.textContent = pos + ' / ' + total;
+    }
+    var dots = '';
+    for (var d = 0; d < total; d++) dots += '<i' + (d < pos ? ' class="on"' : '') + '></i>';
+    progress.innerHTML = dots;
+  }
+
+  function start() {
+    hist = []; picks = {};
+    cur = steps.length && visible(0, {}) ? 0 : nextFrom(0, {});
+    render();
+  }
+
+  // Karten einsetzen. Jede Karte behält ihren eigenen „Add to cart“-Button (einzeln kaufen);
+  // Bundle-Karten bekommen zusätzlich oben rechts einen Schalter „im Bundle / nicht im Bundle“.
+  function cardsInto(grid, list, pickable) {
+    grid.innerHTML = list.map(function (x) { return x.d.c; }).join('');
+    [].slice.call(grid.children).forEach(function (card, j) {
+      var x = list[j];
+      if (!x) return;
+      card.setAttribute('data-i', x.i);
+      if (!pickable) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quiz__pick';
+      btn.setAttribute('data-i', x.i);
+      btn.innerHTML = '<span class="quiz__pick-t"></span>';
+      card.appendChild(btn);
+      paint(card, x.i);
+    });
+  }
+  function paint(card, i) {
+    var on = !!selected[i];
+    card.classList.toggle('is-in', on);
+    var btn = card.querySelector('.quiz__pick');
+    if (btn) {
+      var label = on ? cfg.lOn : cfg.lOff;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.setAttribute('aria-label', label);
+      btn.firstChild.textContent = label;
+    }
+  }
+
+  function addItems(list) {
+    return fetch(cfg.add, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: list })
+    }).then(function (r) { if (!r.ok) throw new Error('add'); return r; });
+  }
+  function bumpCart() {
+    fetch(cfg.cart + '.js', { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (c) {
+        [].slice.call(document.querySelectorAll('.cart-count')).forEach(function (el) {
+          el.textContent = c.item_count;
+          el.classList.toggle('on', c.item_count > 0);
+          el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+        });
+      }).catch(function () {});
+  }
+
+  // Einzelnes Produkt direkt in den Warenkorb, ohne die Seite zu verlassen
+  root.addEventListener('submit', function (e) {
+    var form = e.target.closest ? e.target.closest('.card__form') : null;
+    if (!form) return;
+    e.preventDefault();
+    var input = form.querySelector('[name="id"]');
+    var btn = form.querySelector('[type="submit"]');
+    if (!input || !btn || btn.disabled) return;
+    var label = btn.textContent;
+    btn.disabled = true;
+    addItems([{ id: +input.value, quantity: 1 }]).then(function () {
+      btn.textContent = cfg.lAdded; btn.classList.add('is-done');
+      bumpCart();
+    }).catch(function () {
+      btn.textContent = cfg.lFail;
+    }).then(function () {
+      setTimeout(function () { btn.textContent = label; btn.classList.remove('is-done'); btn.disabled = false; }, 1800);
+    });
+  });
+
+  // Rabatt-Staffel: ab „min“ Produkten base %, pro weiteres Produkt + step %, höchstens max %.
+  // Der Code ist Präfix + Prozent (z. B. ROUTINE20) und muss im Admin mit passender Mindestmenge existieren.
+  function tierPct(n) {
+    var base = +cfg.pct || 0, min = +cfg.min || 3, step = +cfg.step || 0, max = Math.max(+cfg.max || 0, base);
+    if (!cfg.code || base <= 0 || n < min) return 0;
+    return Math.min(max, base + (n - min) * step);
+  }
+
+  function updateSum() {
+    var sel = items.filter(function (x) { return selected[x.i]; });
+    var n = sel.length;
+    var total = sel.reduce(function (a, x) { return a + (+x.d.p || 0); }, 0);
+    var min = +cfg.min || 3, base = +cfg.pct || 0;
+    var deal = !!cfg.code && base > 0;
+    var pct = tierPct(n);
+    var off = pct ? Math.round(total * pct / 100) : 0;
+    root.querySelector('.quiz__sum-count').textContent = fill(cfg.lItems, { n: n });
+    root.querySelector('.quiz__sum-price').innerHTML = (off ? '<s>' + money(total) + '</s>' : '') + money(total - off);
+    var note = root.querySelector('.quiz__sum-note');
+    var text = '';
+    if (deal && off) {
+      text = fill(cfg.lSave, { p: pct, amount: money(off) });
+      var nextPct = tierPct(n + 1);
+      if (nextPct > pct && cfg.lNext) text += ' · ' + fill(cfg.lNext, { n: 1, p: nextPct });
+    } else if (deal) {
+      text = fill(cfg.lMore, { n: min - n, p: base });
+    }
+    note.textContent = text;
+    note.classList.toggle('is-on', !!off);
+    allBtn.disabled = !n;
+  }
+
+  function finish() {
+    cur = -1;
+    var want = {}, musts = [], strict = [];
+    function has(x, tags) { return tags.some(function (t) { return x.tags.indexOf(t) > -1; }); }
+    hist.forEach(function (k) {
+      var p = picks[k];
+      p.tags.forEach(function (t) { want[t] = (want[t] || 0) + p.w; });
+      if (p.must && p.tags.length) musts.push(p.tags);
+      // Strenge Frage: Produkte, die für eine andere Antwort gemacht sind, rutschen nach hinten
+      if (meta[k].strict && p.tags.length) {
+        var other = [];
+        meta[k].opts.forEach(function (o) { o.forEach(function (t) { if (p.tags.indexOf(t) < 0 && other.indexOf(t) < 0) other.push(t); }); });
+        strict.push({ w: p.w, tags: p.tags, other: other });
+      }
+    });
+    items.forEach(function (x) {
+      x.s = x.tags.reduce(function (a, t) { return a + (want[t] || 0); }, 0);
+      strict.forEach(function (q) { if (has(x, q.other) && !has(x, q.tags)) x.s -= q.w; });
+      x.hits = musts.filter(function (m) { return has(x, m); }).length;
+    });
+    var rank = function (a, b) { return b.s - a.s || a.i - b.i; };
+    var pool = items.filter(function (x) { return !x.kit && x.s > 0 && (x.hits > 0 || !musts.length); }).sort(rank);
+    var chosen = [], used = {};
+    function free(x) { return chosen.indexOf(x) < 0 && !x.slots.some(function (s) { return used[s]; }); }
+    function take(x) { chosen.push(x); x.slots.forEach(function (s) { used[s] = 1; }); }
+    // Jede wichtige Antwort bekommt mindestens ein passendes Produkt
+    musts.forEach(function (tags) {
+      if (chosen.some(function (x) { return has(x, tags); })) return;
+      for (var j = 0; j < pool.length; j++) if (free(pool[j]) && has(pool[j], tags)) { take(pool[j]); break; }
+    });
+    var count = +cfg.count || 3;
+    pool.forEach(function (x) { if (chosen.length < count && free(x)) take(x); });
+    chosen.sort(rank);
+    var extras = [];
+    pool.forEach(function (x) { if (extras.length < (+cfg.extra || 0) && free(x)) { extras.push(x); x.slots.forEach(function (s) { used[s] = 1; }); } });
+    var need = Math.min(2, musts.length);
+    var kits = items.filter(function (x) { return x.kit && x.s > 0 && x.hits >= need; }).sort(rank).slice(0, +cfg.kits || 0);
+
+    selected = {};
+    chosen.forEach(function (x) { selected[x.i] = true; });
+    cardsInto(gridB, chosen, true);
+    cardsInto(gridX, extras, true);
+    cardsInto(gridK, kits, false);
+    more.hidden = !extras.length;
+    kitsBox.hidden = !kits.length;
+    sum.hidden = !chosen.length;
+    empty.hidden = chosen.length > 0 || kits.length > 0;
+    err.hidden = true;
+    allBtn.disabled = false;
+    updateSum();
+    render();
+    root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  root.addEventListener('click', function (e) {
+    var opt = e.target.closest('.quiz__opt');
+    if (opt) {
+      var k = steps.indexOf(opt.closest('.quiz__step'));
+      if (k !== cur) return;
+      picks[k] = { w: meta[k].w, must: meta[k].must, tags: split(opt.dataset.tags) };
+      hist.push(k);
+      var nxt = nextFrom(k, tagSet());
+      if (nxt < 0) finish();
+      else {
+        cur = nxt; render();
+        var top = root.querySelector('.quiz__panel').getBoundingClientRect().top;
+        if (top < 0) root.querySelector('.quiz__panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+    if (e.target.closest('.quiz__back')) {
+      if (!hist.length) return;
+      cur = hist.pop(); delete picks[cur]; render();
+      return;
+    }
+    var pick = e.target.closest('.quiz__pick');
+    if (pick) {
+      var i = +pick.getAttribute('data-i');
+      selected[i] = !selected[i];
+      paint(pick.closest('.card'), i);
+      updateSum();
+      return;
+    }
+    if (e.target.closest('.quiz__restart')) {
+      start();
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    if (e.target.closest('.quiz__all')) {
+      var sel = items.filter(function (x) { return selected[x.i]; });
+      if (!sel.length) return;
+      allBtn.disabled = true; err.hidden = true;
+      var pct = tierPct(sel.length);
+      addItems(sel.map(function (x) { return { id: x.d.v, quantity: 1 }; })).then(function () {
+        var base = (cfg.root || '/').replace(/\/$/, '');
+        window.location.href = pct
+          ? base + '/discount/' + encodeURIComponent(cfg.code + pct) + '?redirect=' + encodeURIComponent(cfg.cart)
+          : cfg.cart;
+      }).catch(function () { allBtn.disabled = false; err.hidden = false; });
+    }
+  });
+
+  start();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Your Routine (quiz)",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Your Routine" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "HTML allowed", "default": "Find <em>your</em> routine." },
+    { "type": "text", "id": "intro", "label": "Intro", "default": "A few quick questions. We build your bundle." },
+    { "type": "header", "content": "Result" },
+    { "type": "text", "id": "result_eyebrow", "label": "Small heading", "default": "Your bundle" },
+    { "type": "text", "id": "result_heading", "label": "Heading", "info": "HTML allowed", "default": "Your <em>routine.</em>" },
+    { "type": "range", "id": "result_count", "label": "Products in the bundle", "min": 2, "max": 6, "step": 1, "default": 3 },
+    { "type": "text", "id": "extra_heading", "label": "Heading: more products", "default": "Also fits you" },
+    { "type": "range", "id": "extra_count", "label": "More products to add", "min": 0, "max": 6, "step": 1, "default": 3 },
+    { "type": "text", "id": "kits_heading", "label": "Heading: ready-made kits", "default": "Or take a ready-made kit" },
+    { "type": "range", "id": "kits_count", "label": "Kits shown", "info": "Products with the tag set. Only kits that fit at least two answers are shown.", "min": 0, "max": 4, "step": 1, "default": 2 },
+    { "type": "header", "content": "Bundle discount" },
+    { "type": "paragraph", "content": "Tiered discount: from the minimum number of products the bundle gets the start discount, every extra product adds more, up to the maximum. The code used is prefix + percent (ROUTINE15, ROUTINE20, ROUTINE25, ROUTINE30). Each code must exist in Shopify admin under Discounts, with the matching minimum quantity. Leave the prefix empty to switch the discount off." },
+    { "type": "text", "id": "bundle_code", "label": "Discount code prefix", "default": "ROUTINE" },
+    { "type": "range", "id": "bundle_min", "label": "Minimum products", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "bundle_percent", "label": "Start discount", "unit": "%", "min": 0, "max": 30, "step": 5, "default": 15 },
+    { "type": "range", "id": "bundle_step", "label": "Extra per extra product", "unit": "%", "min": 0, "max": 10, "step": 5, "default": 5 },
+    { "type": "range", "id": "bundle_max", "label": "Maximum discount", "unit": "%", "min": 15, "max": 30, "step": 5, "default": 25 },
+    { "type": "header", "content": "Texts" },
+    { "type": "text", "id": "pick_on", "label": "Product is in the bundle", "default": "In bundle" },
+    { "type": "text", "id": "pick_off", "label": "Product is not in the bundle", "default": "Add to bundle" },
+    { "type": "text", "id": "added_text", "label": "Single product added", "default": "Added ✓" },
+    { "type": "text", "id": "fail_text", "label": "Single product failed", "default": "Try again" },
+    { "type": "text", "id": "sum_items", "label": "Product count", "info": "[n] = number", "default": "[n] products" },
+    { "type": "text", "id": "sum_save", "label": "Discount active", "info": "[p] = percent, [amount] = saving", "default": "Bundle discount: you save [amount] ([p]%)" },
+    { "type": "text", "id": "sum_more", "label": "Discount not reached", "info": "[n] = products missing, [p] = percent", "default": "Add [n] more to save [p]%" },
+    { "type": "text", "id": "sum_next", "label": "Next discount level", "info": "[n] = products, [p] = percent", "default": "[n] more = [p]% off" },
+    { "type": "text", "id": "all_label", "label": "Button: take the bundle", "default": "Get the bundle" },
+    { "type": "text", "id": "restart_label", "label": "Button: restart", "default": "Start over" },
+    { "type": "text", "id": "error_text", "label": "Error message", "default": "Something went wrong. Please try again." },
+    { "type": "text", "id": "empty_text", "label": "Text when nothing matches", "default": "No match yet. Browse the whole shop instead." },
+    { "type": "paragraph", "content": "Products are matched by their tags that start with quiz- (for example quiz-skin, quiz-oily). Products with the same quiz-slot- tag never end up in the bundle together." }
+  ],
+  "max_blocks": 20,
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "What do you want to level up first?" },
+        { "type": "textarea", "id": "options", "label": "Answers", "info": "One answer per line: Answer text | quiz-tag1, quiz-tag2", "default": "Skin | quiz-skin\nHair | quiz-hair" },
+        { "type": "text", "id": "show_if", "label": "Show only after", "info": "Only shows this question if an earlier answer had one of these tags, for example quiz-hair. Empty = always." },
+        { "type": "range", "id": "weight", "label": "Importance", "info": "Higher = this answer counts more", "min": 1, "max": 4, "step": 1, "default": 2 },
+        { "type": "checkbox", "id": "must_match", "label": "Bundle must cover this answer", "default": true },
+        { "type": "checkbox", "id": "strict", "label": "Answers exclude each other", "info": "For type questions (skin type, hair type): products made for another answer rank lower.", "default": false }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Your Routine (quiz)", "blocks": [{ "type": "question" }] }]
+}
+{% endschema %}

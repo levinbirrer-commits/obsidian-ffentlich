@@ -1,0 +1,46 @@
+<section class="section value">
+  <div class="wrap">
+    <div class="section__head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.link_label != blank -%}
+        <a class="step__link" href="{{ section.settings.link | default: routes.root_url }}">{{ section.settings.link_label }} →</a>
+      {%- endif -%}
+    </div>
+    <div class="value__grid">
+      {%- for block in section.blocks -%}
+        <div class="value__item" {{ block.shopify_attributes }}>
+          <span class="value__n">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Numbered points",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Why us" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "HTML allowed, e.g. <em>More</em>", "default": "Less hype. <em>More</em> routine." },
+    { "type": "text", "id": "link_label", "label": "Link label (optional)", "default": "More about us" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Point",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Curated" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "We only stock products that have sold thousands of times and are well reviewed. No filler." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Numbered points", "blocks": [{ "type": "point" }, { "type": "point" }, { "type": "point" }] }]
+}
+{% endschema %}

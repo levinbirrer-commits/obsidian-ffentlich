@@ -1,0 +1,69 @@
+{%- comment -%} Suche, 404, alle Kollektionen, Blog, Artikel – je nach Template {%- endcomment -%}
+{%- case template.name -%}
+  {%- when 'search' -%}
+    {%- assign t_c = 'sno.search.crumb' | t -%}{%- assign t_h = 'sno.search.heading_html' | t -%}
+    {%- render 'sno-texthero', crumb: t_c, eyebrow: t_c, heading: t_h, text: '' -%}
+    <section class="section cat">
+      <div class="wrap">
+        <form action="{{ routes.search_url }}" method="get" class="search-form nl-form" role="search">
+          <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'sno.search.placeholder' | t }}" aria-label="{{ 'sno.search.crumb' | t }}">
+          <input type="hidden" name="type" value="product">
+          <button class="btn btn--solid" type="submit">{{ 'sno.search.button' | t }}</button>
+        </form>
+        {%- if search.performed -%}
+          <p class="search-count">{%- assign terms_esc = search.terms | escape -%}{{ 'sno.search.results' | t | replace: '[n]', search.results_count | replace: '[terms]', terms_esc }}</p>
+          {%- paginate search.results by 24 -%}
+            <div class="grid">
+              {%- for item in search.results -%}
+                {%- if item.object_type == 'product' -%}{%- render 'sno-card', product: item -%}{%- endif -%}
+              {%- endfor -%}
+            </div>
+            {%- if paginate.pages > 1 -%}<nav class="pager">{{ paginate | default_pagination }}</nav>{%- endif -%}
+          {%- endpaginate -%}
+        {%- endif -%}
+      </div>
+    </section>
+
+  {%- when '404' -%}
+    <div class="wrap notfound">
+      <h1 class="h2">{{ 'sno.not_found.heading_html' | t }}</h1>
+      <p>{{ 'sno.not_found.text' | t }}</p>
+      <a class="btn btn--solid" href="{{ routes.root_url }}#shop">{{ 'sno.go_to_shop' | t }}</a>
+    </div>
+
+  {%- when 'list-collections' -%}
+    {%- assign t_h = 'sno.collections.heading_html' | t -%}
+    {%- render 'sno-texthero', crumb: 'Shop', eyebrow: 'Shop', heading: t_h, text: '' -%}
+    <section class="more">
+      <div class="wrap more__inner">
+        <div class="more__links">
+          {%- for c in collections -%}
+            <a class="more-cat" href="{{ c.url }}"><span>{{ forloop.index | prepend: '0' }}</span>{{ c.title }} →</a>
+          {%- endfor -%}
+        </div>
+      </div>
+    </section>
+
+  {%- when 'blog' -%}
+    {%- assign t_e = 'sno.blog.eyebrow' | t -%}
+    {%- render 'sno-texthero', crumb: blog.title, eyebrow: t_e, heading: blog.title, text: '' -%}
+    <section class="section">
+      <div class="wrap faq__list">
+        {%- paginate blog.articles by 12 -%}
+          {%- for article in blog.articles -%}
+            <details><summary><a href="{{ article.url }}">{{ article.title }}</a></summary><div class="answer">{{ article.excerpt_or_content | strip_html | truncatewords: 40 }}</div></details>
+          {%- else -%}
+            <p class="muted-note">{{ 'sno.blog.empty' | t }}</p>
+          {%- endfor -%}
+        {%- endpaginate -%}
+      </div>
+    </section>
+
+  {%- when 'article' -%}
+    {%- render 'sno-texthero', crumb: blog.title, eyebrow: blog.title, heading: article.title, text: '' -%}
+    <section class="section"><div class="wrap"><div class="rte rte--page">{{ article.content }}</div></div></section>
+{%- endcase -%}
+
+{% schema %}
+{ "name": "SNØ Misc", "settings": [] }
+{% endschema %}

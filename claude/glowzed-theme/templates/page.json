@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "heading": {
+      "type": "sno-text-hero",
+      "settings": {}
+    },
+    "main": {
+      "type": "sno-page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "heading",
+    "main"
+  ]
+}

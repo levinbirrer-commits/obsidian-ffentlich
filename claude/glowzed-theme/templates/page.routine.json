@@ -1,0 +1,93 @@
+{
+  "sections": {
+    "heading": {
+      "type": "sno-text-hero",
+      "settings": {
+        "eyebrow": "The routine",
+        "heading": "Five <em>minutes.</em>",
+        "text": "No twelve-step program. Five moves in the morning and three at night. Consistency beats everything."
+      }
+    },
+    "morning": {
+      "type": "sno-routine",
+      "settings": {
+        "eyebrow": "Morning",
+        "heading": "Look <em>awake.</em>"
+      },
+      "blocks": {
+        "step_14": {
+          "type": "step",
+          "settings": {
+            "product": "daily-face-cleanser",
+            "title": "Cleanse",
+            "time": "30 sec",
+            "text": "Wash off the oil and dirt from the night. Lukewarm, not hot."
+          }
+        },
+        "step_15": {
+          "type": "step",
+          "settings": {
+            "product": "under-eye-patches",
+            "title": "Wake up",
+            "time": "15 min",
+            "text": "Eye patches on while you make coffee."
+          }
+        },
+        "step_16": {
+          "type": "step",
+          "settings": {
+            "product": "gua-sha-stone",
+            "title": "Massage",
+            "time": "3 min",
+            "text": "Gua sha on moisturized skin: jaw, cheeks, forehead."
+          }
+        },
+        "step_17": {
+          "type": "step",
+          "settings": {
+            "product": "tallow-balm",
+            "title": "Moisturize",
+            "time": "30 sec",
+            "text": "A pea-sized amount of tallow balm, spread thin."
+          }
+        },
+        "step_18": {
+          "type": "step",
+          "settings": {
+            "product": "sea-salt-spray",
+            "title": "Style",
+            "time": "60 sec",
+            "text": "Sea salt spray into towel-dried hair, blow-dry, done."
+          }
+        }
+      },
+      "block_order": [
+        "step_14",
+        "step_15",
+        "step_16",
+        "step_17",
+        "step_18"
+      ]
+    },
+    "evening": {
+      "type": "sno-featured",
+      "settings": {
+        "eyebrow": "Evening",
+        "heading": "Let it <em>work</em> overnight.",
+        "note": "Retinol for your skin, mouth tape and nose strips for nasal breathing while you sleep.",
+        "products": [
+          "retinol-night-cream",
+          "mouth-tape",
+          "nose-strips"
+        ],
+        "tags": "",
+        "limit": 3
+      }
+    }
+  },
+  "order": [
+    "heading",
+    "morning",
+    "evening"
+  ]
+}
